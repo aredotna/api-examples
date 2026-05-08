@@ -8,7 +8,7 @@ Each example lives in its own folder, picks its own stack and tooling, and deplo
 
 | Folder | What it shows | Stack |
 | --- | --- | --- |
-| [`client/`](./client) | Minimal authenticated React app using the published `@aredotna/sdk` and `@aredotna/react-query` packages. | Vite, React 18, pnpm, `@aredotna/sdk` |
+| [`explorer/`](./explorer) | Generic Are.na client for browsing channels, blocks, and users — built on the published `@aredotna/sdk` and `@aredotna/react-query` packages. | Vite, React 18, pnpm, `@aredotna/sdk` |
 | [`swimlanes/`](./swimlanes) | Kanban-style board built directly on the Are.na REST API via generated OpenAPI types. | Vite, React 19, yarn, Tailwind, shadcn/ui, `openapi-fetch` |
 
 See each folder's `README.md` for setup, env vars, and scripts.
@@ -18,7 +18,7 @@ See each folder's `README.md` for setup, env vars, and scripts.
 Each example is independent. Use whatever package manager it specifies:
 
 ```sh
-cd client && pnpm install && pnpm dev
+cd explorer && pnpm install && pnpm dev
 # or
 cd swimlanes && yarn install && yarn dev
 ```
@@ -28,7 +28,7 @@ cd swimlanes && yarn install && yarn dev
 Each example is deployed as its own Vercel project. When creating a project on Vercel:
 
 1. Import this repo.
-2. Set **Root Directory** to the example folder (e.g. `client` or `swimlanes`).
+2. Set **Root Directory** to the example folder (e.g. `explorer` or `swimlanes`).
 3. Vercel will pick up the example's own `vercel.json`, `package.json`, and lockfile.
 4. Set the example's environment variables (see its `.env.example`).
 

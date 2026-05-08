@@ -1,6 +1,6 @@
-# Are.na V3 Client Demo
+# Are.na Explorer
 
-React + TypeScript demo for the Are.na API using the published `@aredotna/sdk` and `@aredotna/react-query` packages.
+A generic Are.na client for browsing channels, blocks, and users. Built with React + TypeScript on top of the published `@aredotna/sdk` and `@aredotna/react-query` packages.
 
 ## Quick Start
 

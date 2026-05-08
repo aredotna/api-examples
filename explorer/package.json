@@ -1,5 +1,5 @@
 {
-  "name": "arena-client-demo",
+  "name": "arena-explorer",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "lint": "tsc --noEmit"
   },
-  "description": "Are.na React frontend demo",
+  "description": "Generic Are.na client built on @aredotna/sdk",
   "dependencies": {
     "@aredotna/icons": "^0.2.0",
     "@aredotna/react-query": "^0.0.4",
