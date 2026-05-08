@@ -2,14 +2,14 @@
 
 A collection of self-contained example apps demonstrating different ways to build on the [Are.na](https://www.are.na) API.
 
-Each example lives in its own folder, picks its own stack and tooling, and deploys as its own Vercel project. There is **no shared code** between examples — that's intentional. Each one should be readable top-to-bottom on its own.
+Each example lives in its own folder, picks its own stack and tooling, and deploys as its own Vercel project. There is **no shared code** between examples. Each one should be readable top-to-bottom on its own.
 
 ## Examples
 
-| Folder | What it shows | Stack |
-| --- | --- | --- |
-| [`explorer/`](./explorer) | Generic Are.na client for browsing channels, blocks, and users — built on the published `@aredotna/sdk` and `@aredotna/react-query` packages. | Vite, React 18, pnpm, `@aredotna/sdk` |
-| [`swimlanes/`](./swimlanes) | Kanban-style board built directly on the Are.na REST API via generated OpenAPI types. | Vite, React 19, yarn, Tailwind, shadcn/ui, `openapi-fetch` |
+| Folder                      | What it shows                                                                                                                                 | Stack                                                      |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| [`explorer/`](./explorer)   | Generic Are.na client for browsing channels, blocks, and users — built on the published `@aredotna/sdk` and `@aredotna/react-query` packages. | Vite, React 18, pnpm, `@aredotna/sdk`                      |
+| [`swimlanes/`](./swimlanes) | Kanban-style board built on the published `@aredotna/sdk` and `@aredotna/react-query` packages.                                               | Vite, React 19, yarn, Tailwind, shadcn/ui, `@aredotna/sdk` |
 
 See each folder's `README.md` for setup, env vars, and scripts.
 

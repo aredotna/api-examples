@@ -8,7 +8,7 @@ A kanban-style swimlane board built on the Are.na API. Channels become lanes, bl
 - Strict TypeScript
 - Tailwind CSS + shadcn/ui
 - Pragmatic Drag and Drop
-- `openapi-typescript` + `openapi-fetch`
+- `@aredotna/sdk` + `@aredotna/react-query`
 - Biome (lint + format) + Husky pre-commit hooks
 - Vitest
 
@@ -36,16 +36,6 @@ http://localhost:5173/auth/callback
 
 ```bash
 yarn dev
-```
-
-## OpenAPI Type Generation
-
-The app commits a local snapshot and generates types from it:
-
-```bash
-yarn api:spec:refresh      # fetch http://localhost:3111/v3/openapi.json
-yarn api:types:generate    # generate src/api/openapi.generated.ts
-yarn api:sync              # run both
 ```
 
 ## Available Scripts

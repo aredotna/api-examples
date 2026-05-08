@@ -8,6 +8,7 @@
     "types": ["vite/client", "vitest/globals"],
     "skipLibCheck": true,
     "moduleResolution": "bundler",
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]

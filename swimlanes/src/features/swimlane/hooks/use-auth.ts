@@ -1,5 +1,6 @@
+import { useArena } from '@aredotna/react-query'
 import { type Dispatch, useCallback, useEffect, useMemo, useState } from 'react'
-import { type ArenaClient, createArenaClient } from '@/api/client'
+import type { ArenaClient } from '@/api/client'
 import { beginOAuthLogin, maybeFinishOAuthCallback } from '@/auth/oauth'
 import { clearToken, loadToken } from '@/auth/session'
 import { getStoredBoardId, setStoredBoardId } from '@/domain/board-storage'
@@ -17,16 +18,14 @@ export interface UserProfile {
 const EMPTY_USER: UserProfile = { name: '', avatar: null, initials: '' }
 
 export const useAuth = (dispatch: Dispatch<AppAction>) => {
+  const arena = useArena()
   const [token, setToken] = useState<OAuthToken | null>(loadToken())
   const [user, setUser] = useState<UserProfile>(EMPTY_USER)
   const [isHandlingCallback, setIsHandlingCallback] = useState(
     window.location.pathname === '/auth/callback',
   )
 
-  const client = useMemo<ArenaClient | null>(
-    () => (token ? createArenaClient(token.access_token) : null),
-    [token],
-  )
+  const client = useMemo<ArenaClient | null>(() => (token ? arena : null), [arena, token])
 
   const syncBoard = useCallback(
     async (boardId: number): Promise<BoardModel> => {

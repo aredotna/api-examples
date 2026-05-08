@@ -1,6 +1,6 @@
+import type { Metadata, User } from '@aredotna/sdk'
+import type { ConnectableListResponse } from '@aredotna/sdk/api'
 import type { ArenaClient } from '../api/client'
-import { unwrapApiResult } from '../api/client'
-import type { components } from '../api/openapi.generated'
 import {
   readBooleanMetadata,
   readNumberMetadata,
@@ -18,11 +18,11 @@ import {
   type LaneTemplate,
 } from './model'
 
-type ConnectableItem = components['schemas']['ConnectableListResponse']['data'][number]
+type ConnectableItem = ConnectableListResponse['data'][number]
 
 type ArenaChannel = Extract<ConnectableItem, { type: 'Channel' }>
-type ArenaBlock = Exclude<ConnectableItem, ArenaChannel>
-type ApiMetadata = components['schemas']['Metadata']
+type ArenaBlock = Extract<ConnectableItem, { base_type: 'Block' }>
+type ApiMetadata = Metadata
 
 const DEMO_BOARD_MARKER = 'swimlane_kv_demo'
 const OBSOLETE_METADATA_KEYS = {
@@ -49,7 +49,7 @@ const laneKeyFromTitle = (title: string): string =>
 
 const toApiPosition = (index: number): number => Math.max(1, index + 1)
 
-const cardConnectionMetadata = (metadata = {}): ApiMetadata => {
+const cardConnectionMetadata = (metadata: unknown = {}): ApiMetadata => {
   const record = toMetadataRecord(metadata)
 
   return {
@@ -157,18 +157,12 @@ const fetchAllChannelContents = async (
   let page = 1
 
   while (true) {
-    const result = await client.GET('/v3/channels/{id}/contents', {
-      params: {
-        path: { id: String(channelId) },
-        query: {
-          page,
-          per: 100,
-          sort: 'position_asc',
-        },
-      },
+    const data = await client.channels.contents(channelId, {
+      page,
+      per: 100,
+      sort: 'position_asc',
     })
 
-    const data = unwrapApiResult(result, 'Unable to fetch channel contents')
     items.push(...data.data)
 
     const nextPage = data.meta.next_page
@@ -183,11 +177,7 @@ const fetchAllChannelContents = async (
 }
 
 export const fetchBoard = async (client: ArenaClient, boardId: number): Promise<BoardModel> => {
-  const boardResult = await client.GET('/v3/channels/{id}', {
-    params: { path: { id: String(boardId) } },
-  })
-
-  const board = unwrapApiResult(boardResult, 'Unable to fetch board channel')
+  const board = await client.channels.get(boardId)
   const boardItems = await fetchAllChannelContents(client, boardId)
 
   const lanes = boardItems
@@ -225,39 +215,28 @@ const createLaneWithConnection = async (
   lane: LaneTemplate,
   index: number,
 ): Promise<CreatedLane> => {
-  const createLaneResult = await client.POST('/v3/channels', {
-    body: {
-      title: lane.title,
-      visibility: 'private',
-      description: `Swimlane ${lane.title}`,
-      metadata: {
-        [DEMO_METADATA_KEYS.laneColor]: lane.color,
-        [DEMO_METADATA_KEYS.laneWipLimit]: String(lane.wipLimit),
-        [DEMO_METADATA_KEYS.laneKey]: lane.key,
-        [DEMO_METADATA_KEYS.isDefaultLane]: lane.isDefault,
+  const createdLane = await client.channels.create({
+    title: lane.title,
+    visibility: 'private',
+    description: `Swimlane ${lane.title}`,
+    metadata: {
+      [DEMO_METADATA_KEYS.laneColor]: lane.color,
+      [DEMO_METADATA_KEYS.laneWipLimit]: String(lane.wipLimit),
+      [DEMO_METADATA_KEYS.laneKey]: lane.key,
+      [DEMO_METADATA_KEYS.isDefaultLane]: lane.isDefault,
+    },
+  })
+
+  const connections = await client.connections.create({
+    connectable_id: createdLane.id,
+    connectable_type: 'Channel',
+    channels: [
+      {
+        id: boardId,
+        position: toApiPosition(index),
       },
-    },
+    ],
   })
-
-  const createdLane = unwrapApiResult(createLaneResult, 'Unable to create lane')
-
-  const createConnectionResult = await client.POST('/v3/connections', {
-    body: {
-      connectable_id: createdLane.id,
-      connectable_type: 'Channel',
-      channels: [
-        {
-          id: boardId,
-          position: toApiPosition(index),
-        },
-      ],
-    },
-  })
-
-  const connections = unwrapApiResult(
-    createConnectionResult,
-    'Unable to connect lane to board channel',
-  )
 
   return {
     laneId: createdLane.id,
@@ -269,20 +248,16 @@ export const createDemoBoard = async (client: ArenaClient): Promise<number> => {
   const now = new Date()
   const quarter = `Q${Math.ceil((now.getUTCMonth() + 1) / 3)}-${now.getUTCFullYear()}`
 
-  const boardResult = await client.POST('/v3/channels', {
-    body: {
-      title: 'Swimlane Board',
-      visibility: 'private',
-      description: 'Product swimlane board backed by channel/block/connection metadata.',
-      metadata: {
-        [DEMO_METADATA_KEYS.boardType]: DEMO_BOARD_MARKER,
-        [DEMO_METADATA_KEYS.appVersion]: '1',
-        [DEMO_METADATA_KEYS.quarter]: quarter,
-      },
+  const board = await client.channels.create({
+    title: 'Swimlane Board',
+    visibility: 'private',
+    description: 'Product swimlane board backed by channel/block/connection metadata.',
+    metadata: {
+      [DEMO_METADATA_KEYS.boardType]: DEMO_BOARD_MARKER,
+      [DEMO_METADATA_KEYS.appVersion]: '1',
+      [DEMO_METADATA_KEYS.quarter]: quarter,
     },
   })
-
-  const board = unwrapApiResult(boardResult, 'Unable to create board channel')
 
   for (const [index, lane] of DEFAULT_LANES.entries()) {
     await createLaneWithConnection(client, board.id, lane, index)
@@ -313,12 +288,7 @@ export const ensureDemoBoard = async (
   return pendingFreshBoard
 }
 
-export const fetchCurrentUser = async (
-  client: ArenaClient,
-): Promise<components['schemas']['User']> => {
-  const result = await client.GET('/v3/me')
-  return unwrapApiResult(result, 'Unable to load current user')
-}
+export const fetchCurrentUser = async (client: ArenaClient): Promise<User> => client.me()
 
 export const addLane = async (
   client: ArenaClient,
@@ -356,23 +326,19 @@ export const createCard = async (
   laneCardCount: number,
   updatedAtIso = new Date().toISOString(),
 ): Promise<CreatedCard> => {
-  const result = await client.POST('/v3/blocks', {
-    body: {
-      value: draft.description.trim().length > 0 ? draft.description : draft.title,
-      title: draft.title,
-      description: draft.description,
-      channels: [
-        {
-          id: lane.id,
-          position: toApiPosition(laneCardCount),
-          metadata: defaultCardConnectionMetadata(),
-        },
-      ],
-      metadata: blockMetadataForCard(draft, updatedAtIso),
-    },
+  const block = await client.blocks.create({
+    value: draft.description.trim().length > 0 ? draft.description : draft.title,
+    title: draft.title,
+    description: draft.description,
+    channels: [
+      {
+        id: lane.id,
+        position: toApiPosition(laneCardCount),
+        metadata: defaultCardConnectionMetadata(),
+      },
+    ],
+    metadata: blockMetadataForCard(draft, updatedAtIso),
   })
-
-  const block = unwrapApiResult(result, 'Unable to create card')
 
   return {
     blockId: block.id,
@@ -389,25 +355,16 @@ export const updateLaneSettings = async (
     wipLimit: number
   },
 ): Promise<void> => {
-  const result = await client.PUT('/v3/channels/{id}', {
-    params: {
-      path: {
-        id: String(lane.id),
-      },
-    },
-    body: {
-      title: patch.title,
-      metadata: {
-        [DEMO_METADATA_KEYS.laneColor]: patch.color,
-        [DEMO_METADATA_KEYS.laneWipLimit]: String(patch.wipLimit),
-        [DEMO_METADATA_KEYS.laneKey]: lane.laneKey,
-        [DEMO_METADATA_KEYS.isDefaultLane]: lane.isDefault,
-        [OBSOLETE_METADATA_KEYS.laneOrder]: null,
-      },
+  await client.channels.update(lane.id, {
+    title: patch.title,
+    metadata: {
+      [DEMO_METADATA_KEYS.laneColor]: patch.color,
+      [DEMO_METADATA_KEYS.laneWipLimit]: String(patch.wipLimit),
+      [DEMO_METADATA_KEYS.laneKey]: lane.laneKey,
+      [DEMO_METADATA_KEYS.isDefaultLane]: lane.isDefault,
+      [OBSOLETE_METADATA_KEYS.laneOrder]: null,
     },
   })
-
-  unwrapApiResult(result, 'Unable to update lane settings')
 }
 
 export const updateCard = async (
@@ -416,35 +373,25 @@ export const updateCard = async (
   draft: CardEditorDraft,
   updatedAtIso = new Date().toISOString(),
 ): Promise<void> => {
-  const updateBlockResult = await client.PUT('/v3/blocks/{id}', {
-    params: { path: { id: card.id } },
-    body: {
-      title: draft.title,
-      description: draft.description,
-      metadata: {
-        [DEMO_METADATA_KEYS.cardPriority]: draft.priority,
-        [DEMO_METADATA_KEYS.cardEstimatePoints]: String(draft.estimatePoints),
-        [DEMO_METADATA_KEYS.cardEpic]: draft.epic,
-        [DEMO_METADATA_KEYS.cardUpdatedAt]: updatedAtIso,
-      },
+  await client.blocks.update(card.id, {
+    title: draft.title,
+    description: draft.description,
+    metadata: {
+      [DEMO_METADATA_KEYS.cardPriority]: draft.priority,
+      [DEMO_METADATA_KEYS.cardEstimatePoints]: String(draft.estimatePoints),
+      [DEMO_METADATA_KEYS.cardEpic]: draft.epic,
+      [DEMO_METADATA_KEYS.cardUpdatedAt]: updatedAtIso,
     },
   })
 
-  unwrapApiResult(updateBlockResult, 'Unable to update card block')
-
-  const updateConnectionResult = await client.PUT('/v3/connections/{id}', {
-    params: { path: { id: card.connectionId } },
-    body: {
-      metadata: {
-        [DEMO_METADATA_KEYS.connectionBlocked]: draft.blocked,
-        [DEMO_METADATA_KEYS.connectionTargetDate]: draft.targetDate,
-        [OBSOLETE_METADATA_KEYS.connectionRank]: null,
-        [OBSOLETE_METADATA_KEYS.connectionSwimlaneKey]: null,
-      },
+  await client.connections.update(card.connectionId, {
+    metadata: {
+      [DEMO_METADATA_KEYS.connectionBlocked]: draft.blocked,
+      [DEMO_METADATA_KEYS.connectionTargetDate]: draft.targetDate,
+      [OBSOLETE_METADATA_KEYS.connectionRank]: null,
+      [OBSOLETE_METADATA_KEYS.connectionSwimlaneKey]: null,
     },
   })
-
-  unwrapApiResult(updateConnectionResult, 'Unable to update card connection')
 }
 
 export const reorderConnection = async (
@@ -452,15 +399,10 @@ export const reorderConnection = async (
   connectionId: number,
   targetIndex: number,
 ): Promise<void> => {
-  const result = await client.POST('/v3/connections/{id}/move', {
-    params: { path: { id: connectionId } },
-    body: {
-      movement: 'insert_at',
-      position: toApiPosition(targetIndex),
-    },
+  await client.connections.move(connectionId, {
+    movement: 'insert_at',
+    position: toApiPosition(targetIndex),
   })
-
-  unwrapApiResult(result, 'Unable to reorder connection')
 }
 
 export const moveCardAcrossLanes = async (
@@ -469,30 +411,21 @@ export const moveCardAcrossLanes = async (
   targetLane: LaneModel,
   targetIndex: number,
 ): Promise<{ connectionId: number }> => {
-  const connectResult = await client.POST('/v3/connections', {
-    body: {
-      connectable_id: card.id,
-      connectable_type: 'Block',
-      channels: [
-        {
-          id: targetLane.id,
-          position: toApiPosition(targetIndex),
-          metadata: cardConnectionMetadata(card.connectionMetadata),
-        },
-      ],
-    },
+  const connections = await client.connections.create({
+    connectable_id: card.id,
+    connectable_type: 'Block',
+    channels: [
+      {
+        id: targetLane.id,
+        position: toApiPosition(targetIndex),
+        metadata: cardConnectionMetadata(card.connectionMetadata),
+      },
+    ],
   })
 
-  const connections = unwrapApiResult(connectResult, 'Unable to connect card to target lane')
   const newConnectionId = connections.data?.[0]?.id ?? -1
 
-  const removeSourceResult = await client.DELETE('/v3/connections/{id}', {
-    params: { path: { id: card.connectionId } },
-  })
-
-  if (removeSourceResult.error) {
-    throw new Error('Unable to remove original card connection after move')
-  }
+  await client.connections.delete(card.connectionId)
 
   return { connectionId: newConnectionId }
 }
@@ -500,15 +433,7 @@ export const moveCardAcrossLanes = async (
 export const removeCardFromLane = async (
   client: ArenaClient,
   connectionId: number,
-): Promise<void> => {
-  const result = await client.DELETE('/v3/connections/{id}', {
-    params: { path: { id: connectionId } },
-  })
-
-  if (result.error) {
-    throw new Error('Unable to remove card connection')
-  }
-}
+): Promise<void> => client.connections.delete(connectionId)
 
 export const reorderLane = async (
   client: ArenaClient,
