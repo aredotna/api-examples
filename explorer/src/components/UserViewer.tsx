@@ -1,31 +1,31 @@
-import { useUser } from "@aredotna/react-query";
-import { Card, Flex, Heading, Box, Separator, Avatar } from "@radix-ui/themes";
-import { Outlet } from "react-router-dom";
-import { LoadingIndicator } from "./LoadingIndicator";
-import { DefinitionList } from "./DefinitionList";
-import { ErrorMessage } from "./ErrorMessage";
+import { useUser } from '@aredotna/react-query'
+import { Avatar, Box, Card, Flex, Heading, Separator } from '@radix-ui/themes'
+import { Outlet } from 'react-router-dom'
+import { DefinitionList } from './DefinitionList'
+import { ErrorMessage } from './ErrorMessage'
+import { LoadingIndicator } from './LoadingIndicator'
 
 interface UserViewerProps {
-  userId: string;
+  userId: string
 }
 
 function UserViewer({ userId }: UserViewerProps): JSX.Element {
-  const { data: user, isLoading, error } = useUser(userId);
+  const { data: user, isLoading, error } = useUser(userId)
 
   if (isLoading) {
     return (
       <Card>
         <LoadingIndicator message={`Loading user ${userId}...`} />
       </Card>
-    );
+    )
   }
 
   if (error) {
-    return <ErrorMessage error={error} />;
+    return <ErrorMessage error={error} />
   }
 
   if (!user) {
-    return <Box>User not found</Box>;
+    return <Box>User not found</Box>
   }
 
   return (
@@ -33,12 +33,7 @@ function UserViewer({ userId }: UserViewerProps): JSX.Element {
       <Flex direction="column" gap="4">
         <Flex direction="column" gap="3" align="center">
           {user.avatar ? (
-            <Avatar
-              src={user.avatar}
-              alt={user.name}
-              size="8"
-              fallback={user.initials}
-            />
+            <Avatar src={user.avatar} alt={user.name} size="8" fallback={user.initials} />
           ) : (
             <Avatar size="8" fallback={user.initials} />
           )}
@@ -52,10 +47,10 @@ function UserViewer({ userId }: UserViewerProps): JSX.Element {
           <DefinitionList
             width="50%"
             definitions={[
-              { term: "ID", description: user.id },
-              { term: "Slug", description: user.slug },
+              { term: 'ID', description: user.id },
+              { term: 'Slug', description: user.slug },
               {
-                term: "Joined",
+                term: 'Joined',
                 description: new Date(user.created_at).toLocaleString(),
               },
             ]}
@@ -64,14 +59,14 @@ function UserViewer({ userId }: UserViewerProps): JSX.Element {
           <DefinitionList
             width="50%"
             definitions={[
-              { term: "Channels", description: user.counts.channels },
+              { term: 'Channels', description: user.counts.channels },
               {
-                term: "Followers",
+                term: 'Followers',
                 description: user.counts.followers,
                 href: `/user/${userId}/followers`,
               },
               {
-                term: "Following",
+                term: 'Following',
                 description: user.counts.following,
                 href: `/user/${userId}/following`,
               },
@@ -82,7 +77,7 @@ function UserViewer({ userId }: UserViewerProps): JSX.Element {
         <Outlet />
       </Flex>
     </Card>
-  );
+  )
 }
 
-export default UserViewer;
+export default UserViewer

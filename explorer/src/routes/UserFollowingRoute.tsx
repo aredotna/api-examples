@@ -1,23 +1,23 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import UserFollowing from "../components/UserFollowing";
-import ContentTypeFilter from "../components/ContentTypeFilter";
-import { Flex } from "@radix-ui/themes";
-import { FollowableType } from "@aredotna/sdk/api";
+import { FollowableType } from '@aredotna/sdk/api'
+import { Flex } from '@radix-ui/themes'
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import ContentTypeFilter from '../components/ContentTypeFilter'
+import UserFollowing from '../components/UserFollowing'
 
-const PER = 25;
+const PER = 25
 
 function UserFollowingRoute(): JSX.Element | null {
-  const { id: userId } = useParams<{ id: string }>();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [type, setType] = useState<FollowableType | undefined>(undefined);
+  const { id: userId } = useParams<{ id: string }>()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [type, setType] = useState<FollowableType | undefined>(undefined)
 
-  if (!userId) return null;
+  if (!userId) return null
 
   const handleTypeChange = (newType: FollowableType | undefined) => {
-    setType(newType);
-    setCurrentPage(1); // Reset to first page when filter changes
-  };
+    setType(newType)
+    setCurrentPage(1) // Reset to first page when filter changes
+  }
 
   return (
     <Flex direction="column" gap="3">
@@ -25,9 +25,9 @@ function UserFollowingRoute(): JSX.Element | null {
         value={type}
         onChange={handleTypeChange}
         options={[
-          { value: FollowableType.USER, label: "Users" },
-          { value: FollowableType.CHANNEL, label: "Channels" },
-          { value: FollowableType.GROUP, label: "Groups" },
+          { value: FollowableType.USER, label: 'Users' },
+          { value: FollowableType.CHANNEL, label: 'Channels' },
+          { value: FollowableType.GROUP, label: 'Groups' },
         ]}
       />
 
@@ -39,7 +39,7 @@ function UserFollowingRoute(): JSX.Element | null {
         type={type}
       />
     </Flex>
-  );
+  )
 }
 
-export default UserFollowingRoute;
+export default UserFollowingRoute

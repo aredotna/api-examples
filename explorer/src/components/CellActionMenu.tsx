@@ -1,31 +1,19 @@
-import { useState, useEffect, type ReactNode } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import {
-  ContextMenu,
-  Dialog,
-  Button,
-  Flex,
-  Text,
-  TextField,
-  Spinner,
-} from "@radix-ui/themes";
-import {
-  useConnection,
-  useDeleteConnection,
-  useMoveConnection,
-} from "@aredotna/react-query";
-import { useAuth } from "../contexts/AuthContext";
-import { Movement } from "@aredotna/sdk/api";
-import { ConnectDialog } from "./ConnectDialog";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { useConnection, useDeleteConnection, useMoveConnection } from '@aredotna/react-query'
+import { Movement } from '@aredotna/sdk/api'
+import { ArrowRightIcon } from '@radix-ui/react-icons'
+import { Button, ContextMenu, Dialog, Flex, Spinner, Text, TextField } from '@radix-ui/themes'
+import { type ReactNode, useEffect, useState } from 'react'
+import { Link as RouterLink } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import { ConnectDialog } from './ConnectDialog'
 
 interface CellActionMenuProps {
-  connectionId: number;
-  currentPosition: number;
-  itemType: "block" | "channel";
-  itemId: number | string; // block id (number) or channel slug (string)
-  connectableId: number; // Numeric ID for API calls
-  children: ReactNode;
+  connectionId: number
+  currentPosition: number
+  itemType: 'block' | 'channel'
+  itemId: number | string // block id (number) or channel slug (string)
+  connectableId: number // Numeric ID for API calls
+  children: ReactNode
 }
 
 export function CellActionMenu({
@@ -36,47 +24,45 @@ export function CellActionMenu({
   connectableId,
   children,
 }: CellActionMenuProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [positionDialogOpen, setPositionDialogOpen] = useState(false);
-  const [connectDialogOpen, setConnectDialogOpen] = useState(false);
-  const [targetPosition, setTargetPosition] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [positionDialogOpen, setPositionDialogOpen] = useState(false)
+  const [connectDialogOpen, setConnectDialogOpen] = useState(false)
+  const [targetPosition, setTargetPosition] = useState('')
 
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, login } = useAuth()
 
   // Only fetch connection when menu is opened and user is authenticated
-  const { data: connection, isLoading: isLoadingConnection } = useConnection(
-    connectionId,
-    { enabled: menuOpen && isAuthenticated }
-  );
+  const { data: connection, isLoading: isLoadingConnection } = useConnection(connectionId, {
+    enabled: menuOpen && isAuthenticated,
+  })
 
-  const deleteConnection = useDeleteConnection();
-  const moveConnection = useMoveConnection();
+  const deleteConnection = useDeleteConnection()
+  const moveConnection = useMoveConnection()
 
-  const viewUrl =
-    itemType === "block" ? `/block/${itemId}` : `/channel/${itemId}`;
+  const viewUrl = itemType === 'block' ? `/block/${itemId}` : `/channel/${itemId}`
 
   // Reset target position when dialog opens
   useEffect(() => {
     if (positionDialogOpen) {
-      setTargetPosition(String(currentPosition));
+      setTargetPosition(String(currentPosition))
     }
-  }, [positionDialogOpen, currentPosition]);
+  }, [positionDialogOpen, currentPosition])
 
   const handleDelete = () => {
-    deleteConnection.mutate({ id: connectionId });
-    setMenuOpen(false);
-  };
+    deleteConnection.mutate({ id: connectionId })
+    setMenuOpen(false)
+  }
 
   const handleMove = (movement: Movement) => {
     moveConnection.mutate({
       id: connectionId,
       body: { movement },
-    });
-    setMenuOpen(false);
-  };
+    })
+    setMenuOpen(false)
+  }
 
   const handleMoveToPosition = () => {
-    const position = parseInt(targetPosition, 10);
+    const position = parseInt(targetPosition, 10)
     if (!isNaN(position) && position > 0) {
       moveConnection.mutate({
         id: connectionId,
@@ -84,18 +70,18 @@ export function CellActionMenu({
           movement: Movement.INSERT_AT,
           position,
         },
-      });
-      setPositionDialogOpen(false);
-      setMenuOpen(false);
+      })
+      setPositionDialogOpen(false)
+      setMenuOpen(false)
     }
-  };
+  }
 
-  const canRemove = connection?.can?.remove ?? false;
+  const canRemove = connection?.can?.remove ?? false
   // For now, assume if they can remove, they can also sort
   // The API will return 403 if they can't
-  const canSort = canRemove;
+  const canSort = canRemove
 
-  const isLoading = deleteConnection.isPending || moveConnection.isPending;
+  const isLoading = deleteConnection.isPending || moveConnection.isPending
 
   return (
     <>
@@ -122,9 +108,7 @@ export function CellActionMenu({
           {!isAuthenticated && (
             <>
               <ContextMenu.Separator />
-              <ContextMenu.Item onSelect={() => login()}>
-                Log in to edit
-              </ContextMenu.Item>
+              <ContextMenu.Item onSelect={() => login()}>Log in to edit</ContextMenu.Item>
             </>
           )}
 
@@ -148,9 +132,7 @@ export function CellActionMenu({
                 <>
                   <ContextMenu.Separator />
                   <ContextMenu.Sub>
-                    <ContextMenu.SubTrigger disabled={isLoading}>
-                      Move
-                    </ContextMenu.SubTrigger>
+                    <ContextMenu.SubTrigger disabled={isLoading}>Move</ContextMenu.SubTrigger>
                     <ContextMenu.SubContent>
                       <ContextMenu.Item
                         onSelect={() => handleMove(Movement.MOVE_TO_TOP)}
@@ -194,14 +176,8 @@ export function CellActionMenu({
               {canRemove && (
                 <>
                   <ContextMenu.Separator />
-                  <ContextMenu.Item
-                    color="red"
-                    onSelect={handleDelete}
-                    disabled={isLoading}
-                  >
-                    {deleteConnection.isPending
-                      ? "Removing..."
-                      : "Remove from channel"}
+                  <ContextMenu.Item color="red" onSelect={handleDelete} disabled={isLoading}>
+                    {deleteConnection.isPending ? 'Removing...' : 'Remove from channel'}
                   </ContextMenu.Item>
                 </>
               )}
@@ -211,10 +187,7 @@ export function CellActionMenu({
       </ContextMenu.Root>
 
       {/* Position input dialog */}
-      <Dialog.Root
-        open={positionDialogOpen}
-        onOpenChange={setPositionDialogOpen}
-      >
+      <Dialog.Root open={positionDialogOpen} onOpenChange={setPositionDialogOpen}>
         <Dialog.Content maxWidth="300px">
           <Dialog.Title>Move to position</Dialog.Title>
           <Dialog.Description size="2" mb="4">
@@ -230,9 +203,9 @@ export function CellActionMenu({
               placeholder="Enter position"
               autoFocus
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleMoveToPosition();
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  handleMoveToPosition()
                 }
               }}
             />
@@ -253,12 +226,10 @@ export function CellActionMenu({
             <Button
               onClick={handleMoveToPosition}
               disabled={
-                moveConnection.isPending ||
-                !targetPosition ||
-                parseInt(targetPosition, 10) < 1
+                moveConnection.isPending || !targetPosition || parseInt(targetPosition, 10) < 1
               }
             >
-              {moveConnection.isPending ? "Moving..." : "Move"}
+              {moveConnection.isPending ? 'Moving...' : 'Move'}
             </Button>
           </Flex>
         </Dialog.Content>
@@ -272,5 +243,5 @@ export function CellActionMenu({
         connectableType={itemType}
       />
     </>
-  );
+  )
 }

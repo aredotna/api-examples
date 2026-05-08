@@ -1,15 +1,15 @@
-import { useUserFollowing } from "@aredotna/react-query";
-import { LoadingIndicator } from "./LoadingIndicator";
-import FollowGrid from "./FollowGrid";
-import { Box, Text } from "@radix-ui/themes";
-import type { FollowableType } from "@aredotna/sdk/api";
+import { useUserFollowing } from '@aredotna/react-query'
+import type { FollowableType } from '@aredotna/sdk/api'
+import { Box, Text } from '@radix-ui/themes'
+import FollowGrid from './FollowGrid'
+import { LoadingIndicator } from './LoadingIndicator'
 
 interface UserFollowingProps {
-  userId: string;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-  per?: number;
-  type?: FollowableType;
+  userId: string
+  currentPage: number
+  onPageChange: (page: number) => void
+  per?: number
+  type?: FollowableType
 }
 
 function UserFollowing({
@@ -23,10 +23,10 @@ function UserFollowing({
     page: currentPage,
     per,
     type,
-  });
+  })
 
   if (isLoading) {
-    return <LoadingIndicator message="Loading following..." />;
+    return <LoadingIndicator message="Loading following..." />
   }
 
   if (!following || following.data.length === 0) {
@@ -36,16 +36,10 @@ function UserFollowing({
           Not following anyone yet
         </Text>
       </Box>
-    );
+    )
   }
 
-  return (
-    <FollowGrid
-      meta={following.meta}
-      data={following.data}
-      onPageChange={onPageChange}
-    />
-  );
+  return <FollowGrid meta={following.meta} data={following.data} onPageChange={onPageChange} />
 }
 
-export default UserFollowing;
+export default UserFollowing

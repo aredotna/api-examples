@@ -1,7 +1,7 @@
-import { Flex, Spinner, Text } from "@radix-ui/themes";
+import { Flex, Spinner, Text } from '@radix-ui/themes'
 
 interface LoadingIndicatorProps {
-  message: string;
+  message: string
 }
 
 export const LoadingIndicator = ({ message }: LoadingIndicatorProps) => {
@@ -13,5 +13,5 @@ export const LoadingIndicator = ({ message }: LoadingIndicatorProps) => {
         {message}
       </Text>
     </Flex>
-  );
-};
+  )
+}

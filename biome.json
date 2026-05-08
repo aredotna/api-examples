@@ -1,7 +1,13 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.14/schema.json",
   "files": {
-    "includes": ["**/*.{ts,tsx,js,jsx,json,css,md}", "!dist", "!src/components/ui"]
+    "includes": [
+      "**/*.{ts,tsx,js,jsx,json,css,md}",
+      "!**/dist",
+      "!**/dist-ssr",
+      "!**/node_modules",
+      "!swimlanes/src/components/ui"
+    ]
   },
   "formatter": {
     "indentStyle": "space",
@@ -23,8 +29,14 @@
   "linter": {
     "rules": {
       "recommended": true,
+      "a11y": {
+        "noLabelWithoutControl": "warn"
+      },
       "correctness": {
         "useExhaustiveDependencies": "warn"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "warn"
       },
       "style": {
         "noNonNullAssertion": "warn"

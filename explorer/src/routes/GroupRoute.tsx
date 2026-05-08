@@ -1,15 +1,15 @@
-import { useParams } from "react-router-dom";
-import GroupViewer from "../components/GroupViewer";
-import { ErrorMessage } from "../components/ErrorMessage";
+import { useParams } from 'react-router-dom'
+import { ErrorMessage } from '../components/ErrorMessage'
+import GroupViewer from '../components/GroupViewer'
 
 function GroupRoute(): JSX.Element {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>()
 
   if (!id) {
-    return <ErrorMessage error={new Error("No group ID provided")} />;
+    return <ErrorMessage error={new Error('No group ID provided')} />
   }
 
-  return <GroupViewer groupId={id} />;
+  return <GroupViewer groupId={id} />
 }
 
-export default GroupRoute;
+export default GroupRoute

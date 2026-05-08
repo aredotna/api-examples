@@ -1,47 +1,43 @@
-import { useMemo } from "react";
-import { Flex, Button, Text } from "@radix-ui/themes";
-import type { PaginationMeta } from "@aredotna/sdk/api";
+import type { PaginationMeta } from '@aredotna/sdk/api'
+import { Button, Flex, Text } from '@radix-ui/themes'
+import { useMemo } from 'react'
 
 interface PaginationProps {
-  meta: PaginationMeta;
-  onPageChange: (page: number) => void;
+  meta: PaginationMeta
+  onPageChange: (page: number) => void
 }
 
-type PageItem = number | "ellipsis";
+type PageItem = number | 'ellipsis'
 
 interface PageItemProps {
-  item: PageItem;
-  currentPage: number;
-  onPageChange: (page: number) => void;
+  item: PageItem
+  currentPage: number
+  onPageChange: (page: number) => void
 }
 
 const PageItem = ({ item, currentPage, onPageChange }: PageItemProps) => {
-  if (item === "ellipsis") {
-    return <Text color="gray">...</Text>;
+  if (item === 'ellipsis') {
+    return <Text color="gray">...</Text>
   }
 
   return (
     <Button
       size="1"
-      variant={item === currentPage ? "solid" : "outline"}
+      variant={item === currentPage ? 'solid' : 'outline'}
       onClick={() => onPageChange(item)}
     >
       {item}
     </Button>
-  );
-};
-
-interface PageItemsProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+  )
 }
 
-const PageItems = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}: PageItemsProps) => {
+interface PageItemsProps {
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+}
+
+const PageItems = ({ currentPage, totalPages, onPageChange }: PageItemsProps) => {
   const pages = useMemo(() => {
     // Determine which pages should be visible
     const shouldShowPage = (pageNum: number): boolean => {
@@ -51,63 +47,48 @@ const PageItems = ({
         (pageNum >= currentPage - 1 && pageNum <= currentPage + 1) ||
         (currentPage <= 3 && pageNum <= 5) ||
         (currentPage >= totalPages - 2 && pageNum >= totalPages - 4)
-      );
-    };
+      )
+    }
 
     // Get visible page numbers
-    const visiblePages = Array.from(
-      { length: totalPages },
-      (_, i) => i + 1
-    ).filter(shouldShowPage);
+    const visiblePages = Array.from({ length: totalPages }, (_, i) => i + 1).filter(shouldShowPage)
 
     // Insert ellipsis between non-consecutive pages
     return visiblePages.reduce<PageItem[]>((acc, pageNum, index) => {
-      const previousPage = visiblePages[index - 1];
-      if (
-        index > 0 &&
-        previousPage !== undefined &&
-        pageNum - previousPage > 1
-      ) {
-        acc.push("ellipsis");
+      const previousPage = visiblePages[index - 1]
+      if (index > 0 && previousPage !== undefined && pageNum - previousPage > 1) {
+        acc.push('ellipsis')
       }
-      acc.push(pageNum);
-      return acc;
-    }, []);
-  }, [currentPage, totalPages]);
+      acc.push(pageNum)
+      return acc
+    }, [])
+  }, [currentPage, totalPages])
 
   return (
     <>
       {pages.map((item, index) => (
         <PageItem
-          key={item === "ellipsis" ? `ellipsis-${index}` : item}
+          key={item === 'ellipsis' ? `ellipsis-${index}` : item}
           item={item}
           currentPage={currentPage}
           onPageChange={onPageChange}
         />
       ))}
     </>
-  );
-};
+  )
+}
 
-const Pagination = ({
-  meta,
-  onPageChange,
-}: PaginationProps): JSX.Element | null => {
-  const { current_page, total_pages } = meta;
+const Pagination = ({ meta, onPageChange }: PaginationProps): JSX.Element | null => {
+  const { current_page, total_pages } = meta
 
   // Hide pagination if only one page
   if (total_pages <= 1) {
-    return null;
+    return null
   }
 
   return (
     <Flex gap="2" align="center" wrap="wrap">
-      <Button
-        size="1"
-        variant="soft"
-        onClick={() => onPageChange(1)}
-        disabled={current_page === 1}
-      >
+      <Button size="1" variant="soft" onClick={() => onPageChange(1)} disabled={current_page === 1}>
         First
       </Button>
 
@@ -146,7 +127,7 @@ const Pagination = ({
         Last
       </Button>
     </Flex>
-  );
-};
+  )
+}
 
-export default Pagination;
+export default Pagination

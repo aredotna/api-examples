@@ -1,59 +1,45 @@
-import { useState } from "react";
-import { useChannel } from "@aredotna/react-query";
-import {
-  Card,
-  Flex,
-  Heading,
-  Text,
-  Box,
-  Separator,
-  Button,
-} from "@radix-ui/themes";
-import { DefinitionList } from "./DefinitionList";
-import ChannelContents from "./ChannelContents";
-import ChannelConnections from "./ChannelConnections";
-import OwnerAvatar from "./OwnerAvatar";
-import { LoadingIndicator } from "./LoadingIndicator";
-import { ErrorMessage } from "./ErrorMessage";
-import { AddBlockDialog } from "./AddBlockDialog";
-import { ChannelUploadDropzone } from "./ChannelUploadDropzone";
-import { ChannelContentSort } from "@aredotna/sdk/api";
-import {
-  ContentViewerProvider,
-  useContentViewer,
-} from "../contexts/ContentViewerContext";
+import { useChannel } from '@aredotna/react-query'
+import { ChannelContentSort } from '@aredotna/sdk/api'
+import { Box, Button, Card, Flex, Heading, Separator, Text } from '@radix-ui/themes'
+import { useState } from 'react'
+import { ContentViewerProvider, useContentViewer } from '../contexts/ContentViewerContext'
+import { AddBlockDialog } from './AddBlockDialog'
+import ChannelConnections from './ChannelConnections'
+import ChannelContents from './ChannelContents'
+import { ChannelUploadDropzone } from './ChannelUploadDropzone'
+import { DefinitionList } from './DefinitionList'
+import { ErrorMessage } from './ErrorMessage'
+import { LoadingIndicator } from './LoadingIndicator'
+import OwnerAvatar from './OwnerAvatar'
 
 interface ChannelViewerProps {
-  channelId: string;
+  channelId: string
 }
 
-const PER = 25;
+const PER = 25
 
 function ChannelViewerContent({ channelId }: ChannelViewerProps): JSX.Element {
-  const { state, setPage, setSort } = useContentViewer<
-    undefined,
-    ChannelContentSort
-  >();
-  const [addBlockOpen, setAddBlockOpen] = useState(false);
+  const { state, setPage, setSort } = useContentViewer<undefined, ChannelContentSort>()
+  const [addBlockOpen, setAddBlockOpen] = useState(false)
 
-  const { data: channel, isLoading, error } = useChannel(channelId);
+  const { data: channel, isLoading, error } = useChannel(channelId)
 
-  const canAddTo = channel?.can?.add_to ?? false;
+  const canAddTo = channel?.can?.add_to ?? false
 
   if (isLoading) {
     return (
       <Card>
         <LoadingIndicator message={`Loading channel ${channelId}...`} />
       </Card>
-    );
+    )
   }
 
   if (error) {
-    return <ErrorMessage error={error} />;
+    return <ErrorMessage error={error} />
   }
 
   if (!channel) {
-    return <Box />;
+    return <Box />
   }
 
   return (
@@ -65,9 +51,9 @@ function ChannelViewerContent({ channelId }: ChannelViewerProps): JSX.Element {
           <Heading
             size="6"
             style={{
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
             }}
           >
             / {channel.title}
@@ -75,9 +61,7 @@ function ChannelViewerContent({ channelId }: ChannelViewerProps): JSX.Element {
         </Flex>
 
         {channel.description && (
-          <Text
-            dangerouslySetInnerHTML={{ __html: channel.description.html }}
-          />
+          <Text dangerouslySetInnerHTML={{ __html: channel.description.html }} />
         )}
 
         <Separator size="4" />
@@ -87,19 +71,19 @@ function ChannelViewerContent({ channelId }: ChannelViewerProps): JSX.Element {
             width="100%"
             definitions={[
               {
-                term: "Length",
+                term: 'Length',
                 description: `${channel.counts.contents} (${channel.counts.blocks} blocks, ${channel.counts.channels} channels)`,
               },
               {
-                term: "Collaborators",
+                term: 'Collaborators',
                 description: channel.counts.collaborators,
               },
               {
-                term: "Created at",
+                term: 'Created at',
                 description: new Date(channel.created_at).toLocaleString(),
               },
               {
-                term: "Updated at",
+                term: 'Updated at',
                 description: new Date(channel.updated_at).toLocaleString(),
               },
             ]}
@@ -109,15 +93,15 @@ function ChannelViewerContent({ channelId }: ChannelViewerProps): JSX.Element {
             width="100%"
             definitions={[
               {
-                term: "ID",
+                term: 'ID',
                 description: channel.id,
               },
               {
-                term: "Slug",
+                term: 'Slug',
                 description: channel.slug,
               },
               {
-                term: "Visibility",
+                term: 'Visibility',
                 description: channel.visibility,
               },
             ]}
@@ -142,11 +126,7 @@ function ChannelViewerContent({ channelId }: ChannelViewerProps): JSX.Element {
         <ChannelConnections channelId={channelId} />
       </Flex>
 
-      <AddBlockDialog
-        channelId={channel.id}
-        open={addBlockOpen}
-        onOpenChange={setAddBlockOpen}
-      />
+      <AddBlockDialog channelId={channel.id} open={addBlockOpen} onOpenChange={setAddBlockOpen} />
       <ChannelUploadDropzone
         channelId={channelId}
         channelNumericId={channel.id}
@@ -154,7 +134,7 @@ function ChannelViewerContent({ channelId }: ChannelViewerProps): JSX.Element {
         enabled={canAddTo}
       />
     </Card>
-  );
+  )
 }
 
 function ChannelViewer({ channelId }: ChannelViewerProps): JSX.Element {
@@ -169,7 +149,7 @@ function ChannelViewer({ channelId }: ChannelViewerProps): JSX.Element {
     >
       <ChannelViewerContent channelId={channelId} />
     </ContentViewerProvider>
-  );
+  )
 }
 
-export default ChannelViewer;
+export default ChannelViewer

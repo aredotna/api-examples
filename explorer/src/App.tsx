@@ -1,31 +1,26 @@
+import ArenaLogo from '@aredotna/icons/ArenaLogoIcon'
+import { ArenaProvider } from '@aredotna/react-query'
+import { createArena } from '@aredotna/sdk'
+import { Box, Container, Flex, Link, Theme } from '@radix-ui/themes'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { BrowserRouter, Route, Link as RouterLink, Routes } from 'react-router-dom'
+import { UserMenu } from './components/UserMenu'
+import { createArenaOptions } from './config/api'
+import { AuthProvider } from './contexts/AuthContext'
+import { getStoredAccessToken } from './lib/authStorage'
 import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link as RouterLink,
-} from "react-router-dom";
-import { createArena } from "@aredotna/sdk";
-import { ArenaProvider } from "@aredotna/react-query";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Theme, Container, Box, Link, Flex } from "@radix-ui/themes";
-import ArenaLogo from "@aredotna/icons/ArenaLogoIcon";
-import { AuthProvider } from "./contexts/AuthContext";
-import { createArenaOptions } from "./config/api";
-import { getStoredAccessToken } from "./lib/authStorage";
-import { UserMenu } from "./components/UserMenu";
-import {
-  HomeRoute,
   BlockRoute,
   ChannelRoute,
   GroupRoute,
-  UserRoute,
+  HomeRoute,
+  NotFoundRoute,
+  OAuthCallbackRoute,
+  SearchRoute,
   UserContentsRoute,
   UserFollowersRoute,
   UserFollowingRoute,
-  SearchRoute,
-  NotFoundRoute,
-  OAuthCallbackRoute,
-} from "./routes";
+  UserRoute,
+} from './routes'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,13 +30,13 @@ const queryClient = new QueryClient({
       retry: 1,
     },
   },
-});
+})
 
 const arena = createArena(
   createArenaOptions({
     token: async () => getStoredAccessToken() ?? undefined,
   }),
-);
+)
 
 function App(): JSX.Element {
   return (
@@ -76,20 +71,11 @@ function App(): JSX.Element {
                     <Route path="/channel/:id" element={<ChannelRoute />} />
                     <Route path="/user/:id" element={<UserRoute />}>
                       <Route index element={<UserContentsRoute />} />
-                      <Route
-                        path="followers"
-                        element={<UserFollowersRoute />}
-                      />
-                      <Route
-                        path="following"
-                        element={<UserFollowingRoute />}
-                      />
+                      <Route path="followers" element={<UserFollowersRoute />} />
+                      <Route path="following" element={<UserFollowingRoute />} />
                     </Route>
                     <Route path="/group/:id" element={<GroupRoute />} />
-                    <Route
-                      path="/oauth/callback"
-                      element={<OAuthCallbackRoute />}
-                    />
+                    <Route path="/oauth/callback" element={<OAuthCallbackRoute />} />
                     <Route path="*" element={<NotFoundRoute />} />
                   </Routes>
                 </main>
@@ -99,7 +85,7 @@ function App(): JSX.Element {
         </Theme>
       </ArenaProvider>
     </QueryClientProvider>
-  );
+  )
 }
 
-export default App;
+export default App

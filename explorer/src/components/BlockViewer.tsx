@@ -1,35 +1,35 @@
-import { useBlock } from "@aredotna/react-query";
-import { Card, Flex, Heading, Text, Box, Separator } from "@radix-ui/themes";
-import { DefinitionList } from "./DefinitionList";
-import OwnerAvatar from "./OwnerAvatar";
-import { LoadingIndicator } from "./LoadingIndicator";
-import { ExternalLinkIcon } from "@radix-ui/react-icons";
-import { ErrorMessage } from "./ErrorMessage";
-import Image from "./Image";
-import BlockConnections from "./BlockConnections";
-import BlockComments from "./BlockComments";
+import { useBlock } from '@aredotna/react-query'
+import { ExternalLinkIcon } from '@radix-ui/react-icons'
+import { Box, Card, Flex, Heading, Separator, Text } from '@radix-ui/themes'
+import BlockComments from './BlockComments'
+import BlockConnections from './BlockConnections'
+import { DefinitionList } from './DefinitionList'
+import { ErrorMessage } from './ErrorMessage'
+import Image from './Image'
+import { LoadingIndicator } from './LoadingIndicator'
+import OwnerAvatar from './OwnerAvatar'
 
 interface BlockViewerProps {
-  blockId: number;
+  blockId: number
 }
 
 function BlockViewer({ blockId }: BlockViewerProps): JSX.Element {
-  const { data: block, isLoading, error } = useBlock(blockId);
+  const { data: block, isLoading, error } = useBlock(blockId)
 
   if (isLoading) {
     return (
       <Card>
         <LoadingIndicator message={`Loading block ${blockId}...`} />
       </Card>
-    );
+    )
   }
 
   if (error) {
-    return <ErrorMessage error={error} />;
+    return <ErrorMessage error={error} />
   }
 
   if (!block) {
-    return <Box />;
+    return <Box />
   }
 
   return (
@@ -41,12 +41,12 @@ function BlockViewer({ blockId }: BlockViewerProps): JSX.Element {
           <Heading
             size="6"
             style={{
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
             }}
           >
-            / {block.title ?? "Untitled"}
+            / {block.title ?? 'Untitled'}
           </Heading>
         </Flex>
 
@@ -57,31 +57,31 @@ function BlockViewer({ blockId }: BlockViewerProps): JSX.Element {
             width="50%"
             definitions={[
               {
-                term: "ID",
+                term: 'ID',
                 description: block.id,
               },
               {
-                term: "Created at",
+                term: 'Created at',
                 description: new Date(block.created_at).toLocaleString(),
               },
               {
-                term: "Updated at",
+                term: 'Updated at',
                 description: new Date(block.updated_at).toLocaleString(),
               },
               ...(block.source
                 ? [
                     {
-                      term: "Source",
+                      term: 'Source',
                       description: (
                         <Flex gap="2" align="center">
                           <Text
                             style={{
-                              textOverflow: "ellipsis",
-                              overflow: "hidden",
-                              whiteSpace: "nowrap",
+                              textOverflow: 'ellipsis',
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap',
                             }}
                           >
-                            {block.source.title ?? block.source.url ?? ""}
+                            {block.source.title ?? block.source.url ?? ''}
                           </Text>
 
                           <ExternalLinkIcon style={{ flexShrink: 0 }} />
@@ -98,47 +98,43 @@ function BlockViewer({ blockId }: BlockViewerProps): JSX.Element {
             width="50%"
             definitions={[
               {
-                term: "Type",
+                term: 'Type',
                 description: block.type,
               },
               {
-                term: "Visibility",
+                term: 'Visibility',
                 description: block.visibility,
               },
               {
-                term: "State",
+                term: 'State',
                 description: block.state,
               },
             ]}
           />
         </Flex>
 
-        {"image" in block && block.image && (
+        {'image' in block && block.image && (
           <Image
             image={block.image}
             size="large"
-            alt={block.image.alt_text ?? ""}
+            alt={block.image.alt_text ?? ''}
             containerStyle={{
-              maxWidth: "75%",
-              backgroundColor: "var(--gray-3)",
+              maxWidth: '75%',
+              backgroundColor: 'var(--gray-3)',
             }}
             style={{
-              objectFit: "contain",
+              objectFit: 'contain',
             }}
           />
         )}
 
-        {block.type === "Text" && (
-          <Text dangerouslySetInnerHTML={{ __html: block.content.html }} />
-        )}
+        {block.type === 'Text' && <Text dangerouslySetInnerHTML={{ __html: block.content.html }} />}
 
         {block.description && (
           <>
             <Separator size="4" />
 
-            <Text
-              dangerouslySetInnerHTML={{ __html: block.description.html }}
-            />
+            <Text dangerouslySetInnerHTML={{ __html: block.description.html }} />
           </>
         )}
 
@@ -149,36 +145,36 @@ function BlockViewer({ blockId }: BlockViewerProps): JSX.Element {
             <BlockConnections blockId={blockId} />
           </Box>
 
-          {"image" in block && block.image && (
+          {'image' in block && block.image && (
             <DefinitionList
               width="50%"
               definitions={[
                 {
-                  term: "Dimensions",
+                  term: 'Dimensions',
                   description:
                     block.image.width && block.image.height
                       ? `${block.image.width} × ${block.image.height}`
-                      : "Unknown",
+                      : 'Unknown',
                 },
                 {
-                  term: "Aspect ratio",
+                  term: 'Aspect ratio',
                   description: block.image.aspect_ratio
                     ? `${block.image.aspect_ratio.toFixed(2)}:1`
-                    : "Unknown",
+                    : 'Unknown',
                 },
                 {
-                  term: "File size",
+                  term: 'File size',
                   description: block.image.file_size
                     ? `${(block.image.file_size / 1024 / 1024).toFixed(2)} MB`
-                    : "Unknown",
+                    : 'Unknown',
                 },
                 {
-                  term: "Content type",
-                  description: block.image.content_type ?? "Unknown",
+                  term: 'Content type',
+                  description: block.image.content_type ?? 'Unknown',
                 },
                 {
-                  term: "Filename",
-                  description: block.image.filename ?? "Unknown",
+                  term: 'Filename',
+                  description: block.image.filename ?? 'Unknown',
                 },
               ]}
             />
@@ -190,7 +186,7 @@ function BlockViewer({ blockId }: BlockViewerProps): JSX.Element {
         <BlockComments blockId={blockId} />
       </Flex>
     </Card>
-  );
+  )
 }
 
-export default BlockViewer;
+export default BlockViewer

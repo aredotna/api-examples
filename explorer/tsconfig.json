@@ -22,10 +22,7 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": false,
-
-    /* Paths */
-    "baseUrl": "."
+    "noPropertyAccessFromIndexSignature": false
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

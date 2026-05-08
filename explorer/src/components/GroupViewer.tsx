@@ -1,30 +1,30 @@
-import { useGroup } from "@aredotna/react-query";
-import { Card, Flex, Heading, Text, Box, Separator } from "@radix-ui/themes";
-import { LoadingIndicator } from "./LoadingIndicator";
-import { DefinitionList } from "./DefinitionList";
-import { ErrorMessage } from "./ErrorMessage";
+import { useGroup } from '@aredotna/react-query'
+import { Box, Card, Flex, Heading, Separator, Text } from '@radix-ui/themes'
+import { DefinitionList } from './DefinitionList'
+import { ErrorMessage } from './ErrorMessage'
+import { LoadingIndicator } from './LoadingIndicator'
 
 interface GroupViewerProps {
-  groupId: string;
+  groupId: string
 }
 
 function GroupViewer({ groupId }: GroupViewerProps): JSX.Element {
-  const { data: group, isLoading, error } = useGroup(groupId);
+  const { data: group, isLoading, error } = useGroup(groupId)
 
   if (isLoading) {
     return (
       <Card>
         <LoadingIndicator message={`Loading group ${groupId}...`} />
       </Card>
-    );
+    )
   }
 
   if (error) {
-    return <ErrorMessage error={error} />;
+    return <ErrorMessage error={error} />
   }
 
   if (!group) {
-    return <Box>Group not found</Box>;
+    return <Box>Group not found</Box>
   }
 
   return (
@@ -32,9 +32,7 @@ function GroupViewer({ groupId }: GroupViewerProps): JSX.Element {
       <Flex direction="column" gap="4">
         <Heading size="6">{group.name}</Heading>
 
-        {group.bio && (
-          <Text dangerouslySetInnerHTML={{ __html: group.bio.html }} />
-        )}
+        {group.bio && <Text dangerouslySetInnerHTML={{ __html: group.bio.html }} />}
 
         <Separator size="4" />
 
@@ -42,15 +40,15 @@ function GroupViewer({ groupId }: GroupViewerProps): JSX.Element {
           <DefinitionList
             width="50%"
             definitions={[
-              { term: "ID", description: group.id },
-              { term: "Slug", description: group.slug },
+              { term: 'ID', description: group.id },
+              { term: 'Slug', description: group.slug },
               {
-                term: "Created",
+                term: 'Created',
                 description: new Date(group.created_at).toLocaleString(),
               },
               {
-                term: "Owner",
-                description: group.user.name ?? group.user.slug ?? "Unknown",
+                term: 'Owner',
+                description: group.user.name ?? group.user.slug ?? 'Unknown',
                 href: `/user/${group.user.slug}`,
               },
             ]}
@@ -59,14 +57,14 @@ function GroupViewer({ groupId }: GroupViewerProps): JSX.Element {
           <DefinitionList
             width="50%"
             definitions={[
-              { term: "Channels", description: group.counts.channels },
-              { term: "Users", description: group.counts.users },
+              { term: 'Channels', description: group.counts.channels },
+              { term: 'Users', description: group.counts.users },
             ]}
           />
         </Flex>
       </Flex>
     </Card>
-  );
+  )
 }
 
-export default GroupViewer;
+export default GroupViewer

@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import UserFollowers from "../components/UserFollowers";
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import UserFollowers from '../components/UserFollowers'
 
-const PER = 25;
+const PER = 25
 
 function UserFollowersRoute(): JSX.Element | null {
-  const { id: userId } = useParams<{ id: string }>();
-  const [currentPage, setCurrentPage] = useState(1);
+  const { id: userId } = useParams<{ id: string }>()
+  const [currentPage, setCurrentPage] = useState(1)
 
-  if (!userId) return null;
+  if (!userId) return null
 
   return (
     <UserFollowers
@@ -17,7 +17,7 @@ function UserFollowersRoute(): JSX.Element | null {
       onPageChange={setCurrentPage}
       per={PER}
     />
-  );
+  )
 }
 
-export default UserFollowersRoute;
+export default UserFollowersRoute

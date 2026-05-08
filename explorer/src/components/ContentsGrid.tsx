@@ -1,35 +1,35 @@
-import { Flex, Grid, Select } from "@radix-ui/themes";
-import {
+import type {
+  Block,
+  Channel,
   ChannelContentSort,
   ContentSort,
-  type Block,
-  type Channel,
-  type PaginationMeta,
-} from "@aredotna/sdk/api";
-import Pagination from "./Pagination";
-import { ChannelCell, BlockCell } from "./Cell";
+  PaginationMeta,
+} from '@aredotna/sdk/api'
+import { Flex, Grid, Select } from '@radix-ui/themes'
+import { BlockCell, ChannelCell } from './Cell'
+import Pagination from './Pagination'
 
 interface ContentsGridProps<TSortEnum extends string> {
-  meta: PaginationMeta;
-  data: (Block | Channel)[];
-  onPageChange: (page: number) => void;
-  sort?: TSortEnum;
-  sortEnum?: Record<string, TSortEnum>;
-  onSortChange?: (sort: TSortEnum) => void;
-  channelId?: string; // For connection actions (move/delete)
+  meta: PaginationMeta
+  data: (Block | Channel)[]
+  onPageChange: (page: number) => void
+  sort?: TSortEnum
+  sortEnum?: Record<string, TSortEnum>
+  onSortChange?: (sort: TSortEnum) => void
+  channelId?: string // For connection actions (move/delete)
 }
 
 const SORT_LABELS: Record<string, string> = {
-  position_asc: "Position (Low to High)",
-  position_desc: "Position (High to Low)",
-  created_at_asc: "Oldest First",
-  created_at_desc: "Newest First",
-  updated_at_asc: "Least Recently Updated",
-  updated_at_desc: "Recently Updated",
-};
+  position_asc: 'Position (Low to High)',
+  position_desc: 'Position (High to Low)',
+  created_at_asc: 'Oldest First',
+  created_at_desc: 'Newest First',
+  updated_at_asc: 'Least Recently Updated',
+  updated_at_desc: 'Recently Updated',
+}
 
 function getSortLabel(sort: string): string {
-  return SORT_LABELS[sort] || sort;
+  return SORT_LABELS[sort] || sort
 }
 
 function ContentsGrid<TSortEnum extends string>({
@@ -52,7 +52,7 @@ function ContentsGrid<TSortEnum extends string>({
               <Select.Root
                 value={sort}
                 onValueChange={(value) => {
-                  onSortChange(value as TSortEnum);
+                  onSortChange(value as TSortEnum)
                 }}
               >
                 <Select.Trigger />
@@ -69,24 +69,20 @@ function ContentsGrid<TSortEnum extends string>({
           </Flex>
         )}
 
-        <Grid columns={{ initial: "2", sm: "3", md: "4", lg: "5" }} gap="2">
+        <Grid columns={{ initial: '2', sm: '3', md: '4', lg: '5' }} gap="2">
           {data.map((item) => {
-            if (item.type === "Channel") {
+            if (item.type === 'Channel') {
               return (
                 <ChannelCell
                   key={`channel-${item.id}`}
                   channel={item as Channel}
                   channelId={channelId}
                 />
-              );
+              )
             }
             return (
-              <BlockCell
-                key={`block-${item.id}`}
-                block={item as Block}
-                channelId={channelId}
-              />
-            );
+              <BlockCell key={`block-${item.id}`} block={item as Block} channelId={channelId} />
+            )
           })}
         </Grid>
 
@@ -97,7 +93,7 @@ function ContentsGrid<TSortEnum extends string>({
               <Select.Root
                 value={sort}
                 onValueChange={(value) => {
-                  onSortChange(value as TSortEnum);
+                  onSortChange(value as TSortEnum)
                 }}
               >
                 <Select.Trigger />
@@ -114,10 +110,10 @@ function ContentsGrid<TSortEnum extends string>({
         )}
       </Flex>
     </>
-  );
+  )
 }
 
-export default ContentsGrid;
+export default ContentsGrid
 
 // Re-export for type convenience
-export type { ChannelContentSort, ContentSort };
+export type { ChannelContentSort, ContentSort }

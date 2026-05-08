@@ -1,48 +1,39 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
+import { useBlockComments, useCreateBlockComment, useDeleteComment } from '@aredotna/react-query'
+import type { Comment } from '@aredotna/sdk/api'
+import { ChatBubbleIcon, TrashIcon } from '@radix-ui/react-icons'
 import {
-  useBlockComments,
-  useCreateBlockComment,
-  useDeleteComment,
-} from "@aredotna/react-query";
-import { useAuth } from "../contexts/AuthContext";
-import { LoadingIndicator } from "./LoadingIndicator";
-import { ErrorMessage } from "./ErrorMessage";
-import Pagination from "./Pagination";
-import {
-  Flex,
-  Box,
-  Heading,
-  Text,
   Avatar,
-  Link,
+  Box,
   Button,
-  TextArea,
   Card,
+  Flex,
+  Heading,
   IconButton,
-} from "@radix-ui/themes";
-import { TrashIcon, ChatBubbleIcon } from "@radix-ui/react-icons";
-import type { Comment } from "@aredotna/sdk/api";
+  Link,
+  Text,
+  TextArea,
+} from '@radix-ui/themes'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { Link as RouterLink } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import { ErrorMessage } from './ErrorMessage'
+import { LoadingIndicator } from './LoadingIndicator'
+import Pagination from './Pagination'
 
 interface BlockCommentsProps {
-  blockId: number;
+  blockId: number
 }
 
 interface CommentItemProps {
-  comment: Comment;
-  onDelete?: (commentId: number) => void;
-  isDeleting?: boolean;
-  canDelete?: boolean;
+  comment: Comment
+  onDelete?: (commentId: number) => void
+  isDeleting?: boolean
+  canDelete?: boolean
 }
 
-function CommentItem({
-  comment,
-  onDelete,
-  isDeleting,
-  canDelete,
-}: CommentItemProps): JSX.Element {
-  const userHref = `/user/${comment.user.slug}`;
+function CommentItem({ comment, onDelete, isDeleting, canDelete }: CommentItemProps): JSX.Element {
+  const userHref = `/user/${comment.user.slug}`
 
   return (
     <Card size="1">
@@ -82,46 +73,38 @@ function CommentItem({
           )}
         </Flex>
 
-        {comment.body && (
-          <Text
-            size="2"
-            dangerouslySetInnerHTML={{ __html: comment.body.html }}
-          />
-        )}
+        {comment.body && <Text size="2" dangerouslySetInnerHTML={{ __html: comment.body.html }} />}
       </Flex>
     </Card>
-  );
+  )
 }
 
 interface CommentFormData {
-  body: string;
+  body: string
 }
 
 const DEFAULT_VALUES: CommentFormData = {
-  body: "",
-};
-
-interface AddCommentFormProps {
-  onSubmit: (body: string) => void;
-  isSubmitting: boolean;
+  body: '',
 }
 
-function AddCommentForm({
-  onSubmit,
-  isSubmitting,
-}: AddCommentFormProps): JSX.Element {
+interface AddCommentFormProps {
+  onSubmit: (body: string) => void
+  isSubmitting: boolean
+}
+
+function AddCommentForm({ onSubmit, isSubmitting }: AddCommentFormProps): JSX.Element {
   const { register, handleSubmit, reset, watch } = useForm<CommentFormData>({
     defaultValues: DEFAULT_VALUES,
-  });
+  })
 
-  const body = watch("body");
+  const body = watch('body')
 
   const onFormSubmit = (data: CommentFormData) => {
-    onSubmit(data.body.trim());
-    reset();
-  };
+    onSubmit(data.body.trim())
+    reset()
+  }
 
-  const isValid = body.trim().length > 0;
+  const isValid = body.trim().length > 0
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)}>
@@ -129,22 +112,22 @@ function AddCommentForm({
         <TextArea
           placeholder="Write a comment..."
           disabled={isSubmitting}
-          {...register("body", { required: true })}
+          {...register('body', { required: true })}
         />
         <Flex justify="end">
           <Button type="submit" disabled={!isValid || isSubmitting}>
-            {isSubmitting ? "Posting..." : "Post Comment"}
+            {isSubmitting ? 'Posting...' : 'Post Comment'}
           </Button>
         </Flex>
       </Flex>
     </form>
-  );
+  )
 }
 
 function BlockComments({ blockId }: BlockCommentsProps): JSX.Element {
-  const { user } = useAuth();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const { user } = useAuth()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
 
   const {
     data: commentsResponse,
@@ -153,33 +136,36 @@ function BlockComments({ blockId }: BlockCommentsProps): JSX.Element {
   } = useBlockComments(blockId, {
     page: currentPage,
     per: 10,
-  });
+  })
 
-  const createComment = useCreateBlockComment();
-  const deleteComment = useDeleteComment();
+  const createComment = useCreateBlockComment()
+  const deleteComment = useDeleteComment()
 
   const handleAddComment = (body: string) => {
-    createComment.mutate({ blockId, body: { body } });
-  };
+    createComment.mutate({ blockId, body: { body } })
+  }
 
   const handleDeleteComment = (commentId: number) => {
-    setDeletingId(commentId);
-    deleteComment.mutate({ id: commentId }, {
-      onSettled: () => setDeletingId(null),
-    });
-  };
+    setDeletingId(commentId)
+    deleteComment.mutate(
+      { id: commentId },
+      {
+        onSettled: () => setDeletingId(null),
+      },
+    )
+  }
 
   if (isLoading) {
-    return <LoadingIndicator message="Loading comments..." />;
+    return <LoadingIndicator message="Loading comments..." />
   }
 
   if (error) {
-    return <ErrorMessage error={error} />;
+    return <ErrorMessage error={error} />
   }
 
-  const comments = commentsResponse?.data ?? [];
-  const meta = commentsResponse?.meta;
-  const totalCount = meta?.total_count ?? 0;
+  const comments = commentsResponse?.data ?? []
+  const meta = commentsResponse?.meta
+  const totalCount = meta?.total_count ?? 0
 
   return (
     <Box>
@@ -187,15 +173,12 @@ function BlockComments({ blockId }: BlockCommentsProps): JSX.Element {
         <Flex gap="2" align="center">
           <ChatBubbleIcon />
           <Heading size="3">
-            {totalCount} Comment{totalCount === 1 ? "" : "s"}
+            {totalCount} Comment{totalCount === 1 ? '' : 's'}
           </Heading>
         </Flex>
 
         {user && (
-          <AddCommentForm
-            onSubmit={handleAddComment}
-            isSubmitting={createComment.isPending}
-          />
+          <AddCommentForm onSubmit={handleAddComment} isSubmitting={createComment.isPending} />
         )}
 
         {comments.length > 0 && (
@@ -229,7 +212,7 @@ function BlockComments({ blockId }: BlockCommentsProps): JSX.Element {
         )}
       </Flex>
     </Box>
-  );
+  )
 }
 
-export default BlockComments;
+export default BlockComments

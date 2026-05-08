@@ -1,0 +1,31 @@
+{
+  "name": "arena-api-examples",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.0.8",
+  "scripts": {
+    "build": "pnpm -r --if-present build",
+    "dev:explorer": "pnpm --filter arena-explorer dev",
+    "dev:swimlanes": "pnpm --filter swimlane dev",
+    "format": "biome format --write .",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "prepare": "husky",
+    "test": "pnpm -r --if-present test:run",
+    "typecheck": "pnpm -r --if-present typecheck"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md}": "biome check --write --no-errors-on-unmatched"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "msw"
+    ]
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.14",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.3"
+  }
+}

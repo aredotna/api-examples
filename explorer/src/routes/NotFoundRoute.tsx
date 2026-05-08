@@ -1,7 +1,7 @@
-import { ErrorMessage } from "../components/ErrorMessage";
+import { ErrorMessage } from '../components/ErrorMessage'
 
 function NotFoundRoute(): JSX.Element {
-  return <ErrorMessage error={new Error("Not found")} />;
+  return <ErrorMessage error={new Error('Not found')} />
 }
 
-export default NotFoundRoute;
+export default NotFoundRoute

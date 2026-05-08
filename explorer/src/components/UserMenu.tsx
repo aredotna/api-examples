@@ -1,31 +1,24 @@
-import { useState } from "react";
-import {
-  Avatar,
-  Button,
-  DropdownMenu,
-  Flex,
-  Text,
-  Tooltip,
-} from "@radix-ui/themes";
-import { useAuth } from "../contexts/AuthContext";
-import { Link as RouterLink } from "react-router-dom";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { CreateChannelDialog } from "./CreateChannelDialog";
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
+import { Avatar, Button, DropdownMenu, Flex, Text, Tooltip } from '@radix-ui/themes'
+import { useState } from 'react'
+import { Link as RouterLink } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import { CreateChannelDialog } from './CreateChannelDialog'
 
 export const UserMenu = () => {
-  const { isAuthenticated, isLoading, user, logout, login } = useAuth();
-  const [createChannelOpen, setCreateChannelOpen] = useState(false);
+  const { isAuthenticated, isLoading, user, logout, login } = useAuth()
+  const [createChannelOpen, setCreateChannelOpen] = useState(false)
 
   if (isLoading) {
-    return null;
+    return null
   }
 
   if (!isAuthenticated) {
     return (
       <Button size="2" variant="ghost" onClick={login} disabled={isLoading}>
-        {isLoading ? "Loading..." : "Log in with Are.na"}
+        {isLoading ? 'Loading...' : 'Log in with Are.na'}
       </Button>
-    );
+    )
   }
 
   return (
@@ -40,11 +33,7 @@ export const UserMenu = () => {
         </Tooltip>
 
         <Flex align="center" gap="3">
-          <Button
-            size="2"
-            variant="soft"
-            onClick={() => setCreateChannelOpen(true)}
-          >
+          <Button size="2" variant="soft" onClick={() => setCreateChannelOpen(true)}>
             New Channel
           </Button>
 
@@ -55,7 +44,7 @@ export const UserMenu = () => {
                   <Avatar
                     size="1"
                     src={user.avatar ?? undefined}
-                    fallback={user.initials || "U"}
+                    fallback={user.initials || 'U'}
                     radius="full"
                   />
                   <Text size="2" weight="medium">
@@ -66,9 +55,7 @@ export const UserMenu = () => {
 
               <DropdownMenu.Content align="end">
                 <DropdownMenu.Item asChild>
-                  <RouterLink to={`/user/${user.slug}`}>
-                    View profile
-                  </RouterLink>
+                  <RouterLink to={`/user/${user.slug}`}>View profile</RouterLink>
                 </DropdownMenu.Item>
                 <DropdownMenu.Separator />
                 <DropdownMenu.Item color="red" onSelect={logout}>
@@ -80,10 +67,7 @@ export const UserMenu = () => {
         </Flex>
       </Flex>
 
-      <CreateChannelDialog
-        open={createChannelOpen}
-        onOpenChange={setCreateChannelOpen}
-      />
+      <CreateChannelDialog open={createChannelOpen} onOpenChange={setCreateChannelOpen} />
     </>
-  );
-};
+  )
+}

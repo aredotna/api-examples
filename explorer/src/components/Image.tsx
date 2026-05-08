@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
-import { Blurhash } from "react-blurhash";
-import { Spinner } from "@radix-ui/themes";
-import type { BlockImage } from "@aredotna/sdk/api";
+import type { BlockImage } from '@aredotna/sdk/api'
+import { Spinner } from '@radix-ui/themes'
+import { useEffect, useState } from 'react'
+import { Blurhash } from 'react-blurhash'
 
-type ImageSize = "small" | "medium" | "large" | "square";
+type ImageSize = 'small' | 'medium' | 'large' | 'square'
 
 interface ImageProps {
-  image: BlockImage;
-  size?: ImageSize;
-  alt?: string;
-  style?: React.CSSProperties;
-  containerStyle?: React.CSSProperties;
+  image: BlockImage
+  size?: ImageSize
+  alt?: string
+  style?: React.CSSProperties
+  containerStyle?: React.CSSProperties
 }
 
 const SimpleImage = ({
@@ -19,23 +19,23 @@ const SimpleImage = ({
   style,
   filename,
 }: {
-  src: string;
-  alt: string;
-  style?: React.CSSProperties;
-  filename?: string;
+  src: string
+  alt: string
+  style?: React.CSSProperties
+  filename?: string
 }) => (
   <img
     key={filename || src}
     src={src}
     alt={alt}
     style={{
-      width: "100%",
-      height: "auto",
-      display: "block",
+      width: '100%',
+      height: 'auto',
+      display: 'block',
       ...style,
     }}
   />
-);
+)
 
 const BlurhashImage = ({
   src,
@@ -48,23 +48,23 @@ const BlurhashImage = ({
   onLoad,
   imageLoaded,
 }: {
-  src: string;
-  alt: string;
-  blurhash: string;
-  aspectRatio?: number;
-  filename?: string;
-  style?: React.CSSProperties;
-  containerStyle?: React.CSSProperties;
-  onLoad: () => void;
-  imageLoaded: boolean;
+  src: string
+  alt: string
+  blurhash: string
+  aspectRatio?: number
+  filename?: string
+  style?: React.CSSProperties
+  containerStyle?: React.CSSProperties
+  onLoad: () => void
+  imageLoaded: boolean
 }) => (
   <div
     key={filename || src}
     style={{
-      position: "relative",
-      width: "100%",
-      height: "100%",
-      overflow: "hidden",
+      position: 'relative',
+      width: '100%',
+      height: '100%',
+      overflow: 'hidden',
       ...(aspectRatio ? { aspectRatio } : {}),
       ...containerStyle,
     }}
@@ -77,13 +77,13 @@ const BlurhashImage = ({
       resolutionY={32}
       punch={1}
       style={{
-        position: "absolute",
+        position: 'absolute',
         top: 0,
         left: 0,
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         opacity: imageLoaded ? 0 : 1,
-        transition: "opacity 0.3s ease-in-out",
+        transition: 'opacity 0.3s ease-in-out',
       }}
     />
     <img
@@ -91,51 +91,44 @@ const BlurhashImage = ({
       alt={alt}
       onLoad={onLoad}
       style={{
-        position: "absolute",
+        position: 'absolute',
         top: 0,
         left: 0,
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         ...style,
         opacity: imageLoaded ? 1 : 0,
-        transition: "opacity 0.3s ease-in-out",
+        transition: 'opacity 0.3s ease-in-out',
         zIndex: 1,
       }}
     />
   </div>
-);
+)
 
 function Image({
   image,
-  size = "medium",
-  alt = "",
+  size = 'medium',
+  alt = '',
   style,
   containerStyle,
 }: ImageProps): JSX.Element | null {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const src = image[size]?.src;
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const src = image[size]?.src
 
   useEffect(() => {
-    setImageLoaded(false);
-  }, [src]);
+    setImageLoaded(false)
+  }, [src])
 
-  if (!src) return null;
+  if (!src) return null
 
-  const hasGeometry = !!image.aspect_ratio;
-  const hasBlurhash = !!image.blurhash;
+  const hasGeometry = !!image.aspect_ratio
+  const hasBlurhash = !!image.blurhash
 
   // Case 1: No geometry, no blurhash - plain image
   if (!hasGeometry && !hasBlurhash) {
-    const img = (
-      <SimpleImage
-        src={src}
-        alt={alt}
-        style={style}
-        filename={image.filename}
-      />
-    );
+    const img = <SimpleImage src={src} alt={alt} style={style} filename={image.filename} />
 
-    return containerStyle ? <div style={containerStyle}>{img}</div> : img;
+    return containerStyle ? <div style={containerStyle}>{img}</div> : img
   }
 
   // Case 2: Has geometry, no blurhash - sized placeholder with spinner
@@ -143,24 +136,24 @@ function Image({
     return (
       <div
         style={{
-          position: "relative",
-          width: "100%",
+          position: 'relative',
+          width: '100%',
           aspectRatio: image.aspect_ratio ?? undefined,
-          overflow: "hidden",
+          overflow: 'hidden',
           ...containerStyle,
         }}
       >
         {!imageLoaded && (
           <div
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: 0,
               left: 0,
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Spinner size="3" />
@@ -171,19 +164,19 @@ function Image({
           alt={alt}
           onLoad={() => setImageLoaded(true)}
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 0,
             left: 0,
-            width: "100%",
-            height: "100%",
+            width: '100%',
+            height: '100%',
             ...style,
             opacity: imageLoaded ? 1 : 0,
-            transition: "opacity 0.3s ease-in-out",
+            transition: 'opacity 0.3s ease-in-out',
             zIndex: 1,
           }}
         />
       </div>
-    );
+    )
   }
 
   // Case 3: Has blurhash - sized placeholder with blurhash
@@ -199,7 +192,7 @@ function Image({
       onLoad={() => setImageLoaded(true)}
       imageLoaded={imageLoaded}
     />
-  );
+  )
 }
 
-export default Image;
+export default Image

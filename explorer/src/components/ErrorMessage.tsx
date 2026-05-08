@@ -1,8 +1,8 @@
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { Callout } from "@radix-ui/themes";
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { Callout } from '@radix-ui/themes'
 
 export const ErrorMessage = ({ error }: { error: Error }) => {
-  const status = (error as any).response?.status;
+  const status = (error as any).response?.status
 
   return (
     <Callout.Root variant="surface" color="red">
@@ -11,8 +11,8 @@ export const ErrorMessage = ({ error }: { error: Error }) => {
       </Callout.Icon>
 
       <Callout.Text>
-        {error.message} {status ? `(${status})` : ""}
+        {error.message} {status ? `(${status})` : ''}
       </Callout.Text>
     </Callout.Root>
-  );
-};
+  )
+}

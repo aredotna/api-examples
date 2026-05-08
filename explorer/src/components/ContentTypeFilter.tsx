@@ -1,23 +1,23 @@
-import { SegmentedControl } from "@radix-ui/themes";
+import { SegmentedControl } from '@radix-ui/themes'
 
 interface ContentTypeFilterProps<TypeEnum extends string> {
-  value: TypeEnum | undefined;
-  onChange: (value: TypeEnum | undefined) => void;
-  options: { value: TypeEnum; label: string }[];
-  allLabel?: string;
+  value: TypeEnum | undefined
+  onChange: (value: TypeEnum | undefined) => void
+  options: { value: TypeEnum; label: string }[]
+  allLabel?: string
 }
 
 function ContentTypeFilter<TypeEnum extends string>({
   value,
   onChange,
   options,
-  allLabel = "All",
+  allLabel = 'All',
 }: ContentTypeFilterProps<TypeEnum>): JSX.Element {
   return (
     <SegmentedControl.Root
-      value={value ?? "All"}
+      value={value ?? 'All'}
       onValueChange={(v) => {
-        onChange(v === "All" ? undefined : (v as TypeEnum));
+        onChange(v === 'All' ? undefined : (v as TypeEnum))
       }}
     >
       <SegmentedControl.Item value="All">{allLabel}</SegmentedControl.Item>
@@ -28,7 +28,7 @@ function ContentTypeFilter<TypeEnum extends string>({
         </SegmentedControl.Item>
       ))}
     </SegmentedControl.Root>
-  );
+  )
 }
 
-export default ContentTypeFilter;
+export default ContentTypeFilter

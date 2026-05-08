@@ -1,69 +1,56 @@
-import { useNavigate } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
-import {
-  Dialog,
-  Button,
-  Flex,
-  Text,
-  TextField,
-  TextArea,
-  Select,
-} from "@radix-ui/themes";
-import { useCreateChannel } from "@aredotna/react-query";
-import { ChannelVisibility, type CreateChannelData } from "@aredotna/sdk/api";
+import { useCreateChannel } from '@aredotna/react-query'
+import { ChannelVisibility, type CreateChannelData } from '@aredotna/sdk/api'
+import { Button, Dialog, Flex, Select, Text, TextArea, TextField } from '@radix-ui/themes'
+import { Controller, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
 interface CreateChannelDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-type CreateChannelRequest = CreateChannelData["body"];
+type CreateChannelRequest = CreateChannelData['body']
 
 const DEFAULT_VALUES: CreateChannelRequest = {
-  title: "",
-  description: "",
+  title: '',
+  description: '',
   visibility: ChannelVisibility.CLOSED,
-};
+}
 
-export function CreateChannelDialog({
-  open,
-  onOpenChange,
-}: CreateChannelDialogProps) {
-  const navigate = useNavigate();
+export function CreateChannelDialog({ open, onOpenChange }: CreateChannelDialogProps) {
+  const navigate = useNavigate()
 
-  const { register, handleSubmit, control, reset, formState } =
-    useForm<CreateChannelRequest>({
-      defaultValues: DEFAULT_VALUES,
-    });
+  const { register, handleSubmit, control, reset, formState } = useForm<CreateChannelRequest>({
+    defaultValues: DEFAULT_VALUES,
+  })
 
   const createChannel = useCreateChannel({
     onSuccess: (channel) => {
-      reset();
-      onOpenChange(false);
-      navigate(`/channel/${channel.slug}`);
+      reset()
+      onOpenChange(false)
+      navigate(`/channel/${channel.slug}`)
     },
-  });
+  })
 
   const onSubmit = (data: CreateChannelRequest) => {
     createChannel.mutate({
       title: data.title.trim(),
       description: data.description?.trim() || undefined,
       visibility: data.visibility,
-    });
-  };
+    })
+  }
 
   const handleOpenChange = (newOpen: boolean) => {
-    if (!newOpen) reset();
-    onOpenChange(newOpen);
-  };
+    if (!newOpen) reset()
+    onOpenChange(newOpen)
+  }
 
   return (
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Content maxWidth="450px">
         <Dialog.Title>Create New Channel</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Channels are collections of blocks. Give your channel a name and
-          choose its visibility.
+          Channels are collections of blocks. Give your channel a name and choose its visibility.
         </Dialog.Description>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -75,7 +62,7 @@ export function CreateChannelDialog({
               <TextField.Root
                 placeholder="Channel title"
                 autoFocus
-                {...register("title", { required: true })}
+                {...register('title', { required: true })}
               />
             </label>
 
@@ -86,7 +73,7 @@ export function CreateChannelDialog({
               <TextArea
                 placeholder="Optional description (supports markdown)"
                 rows={3}
-                {...register("description")}
+                {...register('description')}
               />
             </label>
 
@@ -98,11 +85,8 @@ export function CreateChannelDialog({
                 name="visibility"
                 control={control}
                 render={({ field }) => (
-                  <Select.Root
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <Select.Trigger style={{ width: "100%" }} />
+                  <Select.Root value={field.value} onValueChange={field.onChange}>
+                    <Select.Trigger style={{ width: '100%' }} />
                     <Select.Content>
                       <Select.Item value={ChannelVisibility.CLOSED}>
                         Closed — Anyone can view, only collaborators can add
@@ -132,15 +116,12 @@ export function CreateChannelDialog({
                 Cancel
               </Button>
             </Dialog.Close>
-            <Button
-              type="submit"
-              disabled={!formState.isValid || createChannel.isPending}
-            >
-              {createChannel.isPending ? "Creating..." : "Create Channel"}
+            <Button type="submit" disabled={!formState.isValid || createChannel.isPending}>
+              {createChannel.isPending ? 'Creating...' : 'Create Channel'}
             </Button>
           </Flex>
         </form>
       </Dialog.Content>
     </Dialog.Root>
-  );
+  )
 }

@@ -9,18 +9,32 @@ Each example lives in its own folder, picks its own stack and tooling, and deplo
 | Folder                      | What it shows                                                                                                                                 | Stack                                                      |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | [`explorer/`](./explorer)   | Generic Are.na client for browsing channels, blocks, and users — built on the published `@aredotna/sdk` and `@aredotna/react-query` packages. | Vite, React 18, pnpm, `@aredotna/sdk`                      |
-| [`swimlanes/`](./swimlanes) | Kanban-style board built on the published `@aredotna/sdk` and `@aredotna/react-query` packages.                                               | Vite, React 19, yarn, Tailwind, shadcn/ui, `@aredotna/sdk` |
+| [`swimlanes/`](./swimlanes) | Kanban-style board built on the published `@aredotna/sdk` and `@aredotna/react-query` packages.                                               | Vite, React 19, pnpm, Tailwind, shadcn/ui, `@aredotna/sdk` |
 
 See each folder's `README.md` for setup, env vars, and scripts.
 
 ## Running an example locally
 
-Each example is independent. Use whatever package manager it specifies:
+Install once from the repo root, then run the example you want:
 
 ```sh
-cd explorer && pnpm install && pnpm dev
-# or
-cd swimlanes && yarn install && yarn dev
+pnpm install
+pnpm dev:explorer
+pnpm dev:swimlanes
+```
+
+You can also run example scripts directly with `pnpm --filter arena-explorer <script>` or `pnpm --filter swimlane <script>`.
+
+## Tooling
+
+The repo uses a pnpm workspace and a shared Biome config for formatting and linting:
+
+```sh
+pnpm lint
+pnpm lint:fix
+pnpm format
+pnpm typecheck
+pnpm test
 ```
 
 ## Deploying to Vercel
@@ -29,7 +43,7 @@ Each example is deployed as its own Vercel project. When creating a project on V
 
 1. Import this repo.
 2. Set **Root Directory** to the example folder (e.g. `explorer` or `swimlanes`).
-3. Vercel will pick up the example's own `vercel.json`, `package.json`, and lockfile.
+3. Vercel will pick up the example's own `vercel.json` and `package.json`, using the root pnpm lockfile.
 4. Set the example's environment variables (see its `.env.example`).
 
 Pushes to `main` will trigger deploys for every linked Vercel project, but each one only rebuilds when files inside its root directory change.
@@ -38,7 +52,7 @@ Pushes to `main` will trigger deploys for every linked Vercel project, but each 
 
 1. Create a new folder at the repo root (e.g. `my-example/`).
 2. Make it fully self-contained:
-   - Its own `package.json` and lockfile.
+   - Its own `package.json`.
    - Its own `README.md` with what it shows, setup steps, and scripts.
    - Its own `.env.example` (never commit a real `.env`).
    - Its own `vercel.json` if it needs SPA rewrites or custom build settings.
@@ -49,5 +63,6 @@ Pushes to `main` will trigger deploys for every linked Vercel project, but each 
 
 - One folder per example. No nested examples.
 - No cross-folder imports.
+- Use the root pnpm workspace and shared Biome config for package management, formatting, and linting.
 - Pick the simplest stack that demonstrates the point.
 - Document any required Are.na OAuth client configuration (redirect URIs, scopes) in the example's README.

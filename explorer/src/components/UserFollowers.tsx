@@ -1,13 +1,13 @@
-import { useUserFollowers } from "@aredotna/react-query";
-import { LoadingIndicator } from "./LoadingIndicator";
-import FollowGrid from "./FollowGrid";
-import { Box, Text } from "@radix-ui/themes";
+import { useUserFollowers } from '@aredotna/react-query'
+import { Box, Text } from '@radix-ui/themes'
+import FollowGrid from './FollowGrid'
+import { LoadingIndicator } from './LoadingIndicator'
 
 interface UserFollowersProps {
-  userId: string;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-  per?: number;
+  userId: string
+  currentPage: number
+  onPageChange: (page: number) => void
+  per?: number
 }
 
 function UserFollowers({
@@ -19,10 +19,10 @@ function UserFollowers({
   const { data: followers, isLoading } = useUserFollowers(userId, {
     page: currentPage,
     per,
-  });
+  })
 
   if (isLoading) {
-    return <LoadingIndicator message="Loading followers..." />;
+    return <LoadingIndicator message="Loading followers..." />
   }
 
   if (!followers || followers.data.length === 0) {
@@ -32,16 +32,10 @@ function UserFollowers({
           No followers yet
         </Text>
       </Box>
-    );
+    )
   }
 
-  return (
-    <FollowGrid
-      meta={followers.meta}
-      data={followers.data}
-      onPageChange={onPageChange}
-    />
-  );
+  return <FollowGrid meta={followers.meta} data={followers.data} onPageChange={onPageChange} />
 }
 
-export default UserFollowers;
+export default UserFollowers

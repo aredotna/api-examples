@@ -4,12 +4,12 @@ A kanban-style swimlane board built on the Are.na API. Channels become lanes, bl
 
 ## Stack
 
-- Yarn + Vite + React 19
+- pnpm + Vite + React 19
 - Strict TypeScript
 - Tailwind CSS + shadcn/ui
 - Pragmatic Drag and Drop
 - `@aredotna/sdk` + `@aredotna/react-query`
-- Biome (lint + format) + Husky pre-commit hooks
+- Biome (lint + format)
 - Vitest
 
 ## Setup
@@ -17,7 +17,7 @@ A kanban-style swimlane board built on the Are.na API. Channels become lanes, bl
 1. Install dependencies:
 
 ```bash
-yarn install
+pnpm install
 ```
 
 2. Copy env vars:
@@ -35,19 +35,19 @@ http://localhost:5173/auth/callback
 4. Start dev server:
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 ## Available Scripts
 
-- `yarn dev` - run Vite dev server
-- `yarn build` - typecheck and production build
-- `yarn typecheck` - run TypeScript project checks
-- `yarn lint` - run Biome check
-- `yarn lint:fix` - auto-fix lint + formatting
-- `yarn format` - format all files
-- `yarn test` - run Vitest in watch mode
-- `yarn test:run` - run Vitest once
+- `pnpm dev` - run Vite dev server
+- `pnpm build` - typecheck and production build
+- `pnpm typecheck` - run TypeScript project checks
+- `pnpm lint` - run Biome check
+- `pnpm lint:fix` - auto-fix lint + formatting
+- `pnpm format` - format all files
+- `pnpm test` - run Vitest in watch mode
+- `pnpm test:run` - run Vitest once
 
 ## Demo Behavior
 

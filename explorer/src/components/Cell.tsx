@@ -1,28 +1,10 @@
-import { Link as RouterLink } from "react-router-dom";
-import {
-  Flex,
-  Text,
-  Box,
-  Link,
-  Badge,
-  Avatar,
-  Spinner,
-} from "@radix-ui/themes";
-import {
-  Link2Icon,
-  PlayIcon,
-  ExclamationTriangleIcon,
-} from "@radix-ui/react-icons";
-import type {
-  Block,
-  Channel,
-  User,
-  Group,
-  EmbeddedConnection,
-} from "@aredotna/sdk/api";
-import Image from "./Image";
-import { channelColors } from "../lib/channelColor";
-import { CellActionMenu } from "./CellActionMenu";
+import type { Block, Channel, EmbeddedConnection, Group, User } from '@aredotna/sdk/api'
+import { ExclamationTriangleIcon, Link2Icon, PlayIcon } from '@radix-ui/react-icons'
+import { Avatar, Badge, Box, Flex, Link, Spinner, Text } from '@radix-ui/themes'
+import { Link as RouterLink } from 'react-router-dom'
+import { channelColors } from '../lib/channelColor'
+import { CellActionMenu } from './CellActionMenu'
+import Image from './Image'
 
 // Base Cell wrapper
 export function Cell({
@@ -34,40 +16,34 @@ export function Cell({
   itemId,
   connectableId,
 }: {
-  children: React.ReactNode;
-  style?: React.CSSProperties;
-  connection?: EmbeddedConnection | null;
-  channelId?: string;
-  itemType?: "block" | "channel";
-  itemId?: number | string; // For navigation (slug for channels, id for blocks)
-  connectableId?: number; // Numeric ID for API calls (always the actual ID)
+  children: React.ReactNode
+  style?: React.CSSProperties
+  connection?: EmbeddedConnection | null
+  channelId?: string
+  itemType?: 'block' | 'channel'
+  itemId?: number | string // For navigation (slug for channels, id for blocks)
+  connectableId?: number // Numeric ID for API calls (always the actual ID)
 }) {
   const cellContent = (
     <Box
       style={{
-        aspectRatio: "1",
-        backgroundColor: "var(--gray-3)",
-        borderRadius: "var(--radius-2)",
-        overflow: "hidden",
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        aspectRatio: '1',
+        backgroundColor: 'var(--gray-3)',
+        borderRadius: 'var(--radius-2)',
+        overflow: 'hidden',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         ...style,
       }}
     >
       {children}
     </Box>
-  );
+  )
 
   // Wrap with context menu if we have connection data
-  if (
-    connection &&
-    channelId &&
-    itemType &&
-    itemId !== undefined &&
-    connectableId !== undefined
-  ) {
+  if (connection && channelId && itemType && itemId !== undefined && connectableId !== undefined) {
     return (
       <CellActionMenu
         connectionId={connection.id}
@@ -78,47 +54,41 @@ export function Cell({
       >
         {cellContent}
       </CellActionMenu>
-    );
+    )
   }
 
-  return cellContent;
+  return cellContent
 }
 
 // Type guards
 export function isBlock(item: Block | Channel | User | Group): item is Block {
-  return "base_type" in item && item.base_type === "Block";
+  return 'base_type' in item && item.base_type === 'Block'
 }
 
-export function isChannel(
-  item: Block | Channel | User | Group
-): item is Channel {
-  return "type" in item && item.type === "Channel";
+export function isChannel(item: Block | Channel | User | Group): item is Channel {
+  return 'type' in item && item.type === 'Channel'
 }
 
 export function isUser(item: Block | Channel | User | Group): item is User {
-  return "type" in item && item.type === "User";
+  return 'type' in item && item.type === 'User'
 }
 
 export function isGroup(item: Block | Channel | User | Group): item is Group {
-  return "type" in item && item.type === "Group";
+  return 'type' in item && item.type === 'Group'
 }
 
 // Channel Cell
 interface ChannelCellProps {
-  channel: Channel;
-  showCount?: boolean;
-  channelId?: string; // The channel we're viewing (for connection actions)
+  channel: Channel
+  showCount?: boolean
+  channelId?: string // The channel we're viewing (for connection actions)
 }
 
-export function ChannelCell({
-  channel,
-  showCount = false,
-  channelId,
-}: ChannelCellProps) {
+export function ChannelCell({ channel, showCount = false, channelId }: ChannelCellProps) {
   return (
     <Cell
       style={{
-        padding: "var(--space-2)",
+        padding: 'var(--space-2)',
         ...channelColors(channel.visibility),
       }}
       connection={channel.connection}
@@ -127,15 +97,15 @@ export function ChannelCell({
       itemId={channel.slug}
       connectableId={channel.id}
     >
-      <Link asChild style={{ width: "100%", height: "100%" }}>
+      <Link asChild style={{ width: '100%', height: '100%' }}>
         <RouterLink
           to={`/channel/${channel.slug}`}
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            height: "100%",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '100%',
           }}
         >
           {showCount ? (
@@ -155,7 +125,7 @@ export function ChannelCell({
         </RouterLink>
       </Link>
     </Cell>
-  );
+  )
 }
 
 // User Cell
@@ -184,7 +154,7 @@ export function UserCell({ user }: { user: User }) {
         </Cell>
       </RouterLink>
     </Link>
-  );
+  )
 }
 
 // Group Cell
@@ -192,7 +162,7 @@ export function GroupCell({ group }: { group: Group }) {
   return (
     <Link asChild>
       <RouterLink to={`/group/${group.slug}`}>
-        <Cell style={{ padding: "var(--space-3)" }}>
+        <Cell style={{ padding: 'var(--space-3)' }}>
           <Flex direction="column" align="center" gap="1">
             <Badge size="1" color="orange">
               Group
@@ -207,32 +177,32 @@ export function GroupCell({ group }: { group: Group }) {
         </Cell>
       </RouterLink>
     </Link>
-  );
+  )
 }
 
 // Block Cell
 interface BlockCellProps {
-  block: Block;
-  channelId?: string; // The channel we're viewing (for connection actions)
+  block: Block
+  channelId?: string // The channel we're viewing (for connection actions)
 }
 
 export function BlockCell({ block, channelId }: BlockCellProps) {
   const imageStyle = {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover" as const,
-  };
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover' as const,
+  }
 
   const linkStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: "100%",
-  };
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+  }
 
   // Handle PendingBlock type or processing state
-  if (block.type === "PendingBlock" || block.state === "processing") {
+  if (block.type === 'PendingBlock' || block.state === 'processing') {
     return (
       <Cell
         connection={block.connection}
@@ -241,7 +211,7 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
         itemId={block.id}
         connectableId={block.id}
       >
-        <Link asChild style={{ width: "100%", height: "100%" }}>
+        <Link asChild style={{ width: '100%', height: '100%' }}>
           <RouterLink to={`/block/${block.id}`} style={linkStyle}>
             <Flex direction="column" align="center" gap="2">
               <Spinner size="3" />
@@ -249,11 +219,11 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
           </RouterLink>
         </Link>
       </Cell>
-    );
+    )
   }
 
   // Handle failed state
-  if (block.state === "failed") {
+  if (block.state === 'failed') {
     return (
       <Cell
         connection={block.connection}
@@ -262,14 +232,10 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
         itemId={block.id}
         connectableId={block.id}
       >
-        <Link asChild style={{ width: "100%", height: "100%" }}>
+        <Link asChild style={{ width: '100%', height: '100%' }}>
           <RouterLink to={`/block/${block.id}`} style={linkStyle}>
             <Flex direction="column" align="center" gap="2" p="3">
-              <ExclamationTriangleIcon
-                width={24}
-                height={24}
-                color="var(--red-9)"
-              />
+              <ExclamationTriangleIcon width={24} height={24} color="var(--red-9)" />
               <Text size="1" color="red" align="center">
                 Processing failed
               </Text>
@@ -282,11 +248,11 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
           </RouterLink>
         </Link>
       </Cell>
-    );
+    )
   }
 
   switch (block.type) {
-    case "Image":
+    case 'Image':
       return (
         <Cell
           connection={block.connection}
@@ -295,22 +261,22 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
           itemId={block.id}
           connectableId={block.id}
         >
-          <Link asChild style={{ width: "100%", height: "100%" }}>
+          <Link asChild style={{ width: '100%', height: '100%' }}>
             <RouterLink to={`/block/${block.id}`} style={linkStyle}>
               {block.image && (
                 <Image
                   image={block.image}
                   size="square"
-                  alt={block.title || "Block"}
+                  alt={block.title || 'Block'}
                   style={imageStyle}
                 />
               )}
             </RouterLink>
           </Link>
         </Cell>
-      );
+      )
 
-    case "Text":
+    case 'Text':
       return (
         <Cell
           connection={block.connection}
@@ -319,30 +285,30 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
           itemId={block.id}
           connectableId={block.id}
         >
-          <Link asChild style={{ width: "100%", height: "100%" }}>
+          <Link asChild style={{ width: '100%', height: '100%' }}>
             <RouterLink to={`/block/${block.id}`} style={linkStyle}>
-              <Box p="2" style={{ width: "100%", height: "100%" }}>
+              <Box p="2" style={{ width: '100%', height: '100%' }}>
                 <Text
                   size="2"
                   color="gray"
                   style={{
-                    display: "-webkit-box",
+                    display: '-webkit-box',
                     WebkitLineClamp: 8,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
                   }}
                   dangerouslySetInnerHTML={{
-                    __html: block.content?.html || "",
+                    __html: block.content?.html || '',
                   }}
                 />
               </Box>
             </RouterLink>
           </Link>
         </Cell>
-      );
+      )
 
-    case "Attachment":
+    case 'Attachment':
       return (
         <Cell
           connection={block.connection}
@@ -351,13 +317,13 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
           itemId={block.id}
           connectableId={block.id}
         >
-          <Link asChild style={{ width: "100%", height: "100%" }}>
+          <Link asChild style={{ width: '100%', height: '100%' }}>
             <RouterLink to={`/block/${block.id}`} style={linkStyle}>
               {block.image && (
                 <Image
                   image={block.image}
                   size="square"
-                  alt={block.title || "Block"}
+                  alt={block.title || 'Block'}
                   style={imageStyle}
                 />
               )}
@@ -367,14 +333,14 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
             position="absolute"
             right="0"
             bottom="0"
-            style={{ zIndex: 1, padding: "var(--space-2)" }}
+            style={{ zIndex: 1, padding: 'var(--space-2)' }}
           >
             <Badge variant="solid">{block.attachment?.file_extension}</Badge>
           </Box>
         </Cell>
-      );
+      )
 
-    case "Link":
+    case 'Link':
       return (
         <Cell
           connection={block.connection}
@@ -383,13 +349,13 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
           itemId={block.id}
           connectableId={block.id}
         >
-          <Link asChild style={{ width: "100%", height: "100%" }}>
+          <Link asChild style={{ width: '100%', height: '100%' }}>
             <RouterLink to={`/block/${block.id}`} style={linkStyle}>
               {block.image && (
                 <Image
                   image={block.image}
                   size="square"
-                  alt={block.title || "Block"}
+                  alt={block.title || 'Block'}
                   style={imageStyle}
                 />
               )}
@@ -399,16 +365,16 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
             position="absolute"
             right="0"
             bottom="0"
-            style={{ zIndex: 1, padding: "var(--space-2)" }}
+            style={{ zIndex: 1, padding: 'var(--space-2)' }}
           >
             <Badge variant="solid">
               <Link2Icon />
             </Badge>
           </Box>
         </Cell>
-      );
+      )
 
-    case "Embed":
+    case 'Embed':
       return (
         <Cell
           connection={block.connection}
@@ -417,13 +383,13 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
           itemId={block.id}
           connectableId={block.id}
         >
-          <Link asChild style={{ width: "100%", height: "100%" }}>
+          <Link asChild style={{ width: '100%', height: '100%' }}>
             <RouterLink to={`/block/${block.id}`} style={linkStyle}>
               {block.image && (
                 <Image
                   image={block.image}
                   size="square"
-                  alt={block.title || "Block"}
+                  alt={block.title || 'Block'}
                   style={imageStyle}
                 />
               )}
@@ -438,7 +404,7 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
             direction="column"
             align="center"
             justify="center"
-            style={{ zIndex: 1, pointerEvents: "none" }}
+            style={{ zIndex: 1, pointerEvents: 'none' }}
           >
             <Flex
               align="center"
@@ -446,15 +412,15 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
               style={{
                 width: 30,
                 height: 25,
-                backgroundColor: "var(--accent-9)",
-                color: "var(--gray-1)",
-                borderRadius: "var(--radius-1)",
+                backgroundColor: 'var(--accent-9)',
+                color: 'var(--gray-1)',
+                borderRadius: 'var(--radius-1)',
               }}
             >
               <PlayIcon />
             </Flex>
           </Flex>
         </Cell>
-      );
+      )
   }
 }

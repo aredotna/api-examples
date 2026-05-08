@@ -19,6 +19,8 @@ pnpm dev:staging  # staging API
 pnpm dev:local    # local API at http://localhost:3111
 pnpm build
 pnpm lint
+pnpm typecheck
+pnpm format
 ```
 
 ## Configuration

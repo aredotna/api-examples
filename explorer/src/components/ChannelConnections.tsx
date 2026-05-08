@@ -1,19 +1,17 @@
-import { useState } from "react";
-import { useChannelConnections } from "@aredotna/react-query";
-import { LoadingIndicator } from "./LoadingIndicator";
-import { Flex, Box, Heading, Separator } from "@radix-ui/themes";
-import { ErrorMessage } from "./ErrorMessage";
-import Pagination from "./Pagination";
-import ChannelLink from "./ChannelLink";
+import { useChannelConnections } from '@aredotna/react-query'
+import { Box, Flex, Heading, Separator } from '@radix-ui/themes'
+import { useState } from 'react'
+import ChannelLink from './ChannelLink'
+import { ErrorMessage } from './ErrorMessage'
+import { LoadingIndicator } from './LoadingIndicator'
+import Pagination from './Pagination'
 
 interface ChannelConnectionsProps {
-  channelId: string;
+  channelId: string
 }
 
-const ChannelConnections = ({
-  channelId,
-}: ChannelConnectionsProps): JSX.Element | null => {
-  const [currentPage, setCurrentPage] = useState(1);
+const ChannelConnections = ({ channelId }: ChannelConnectionsProps): JSX.Element | null => {
+  const [currentPage, setCurrentPage] = useState(1)
   const {
     data: connections,
     isLoading,
@@ -21,18 +19,18 @@ const ChannelConnections = ({
   } = useChannelConnections(channelId, {
     page: currentPage,
     per: 10,
-  });
+  })
 
   if (isLoading) {
-    return <LoadingIndicator message="Loading connections..." />;
+    return <LoadingIndicator message="Loading connections..." />
   }
 
   if (error) {
-    return <ErrorMessage error={error} />;
+    return <ErrorMessage error={error} />
   }
 
   if (!connections || connections.data.length === 0) {
-    return null;
+    return null
   }
 
   return (
@@ -43,7 +41,7 @@ const ChannelConnections = ({
         <Flex direction="column" gap="3">
           <Heading size="3">
             {connections.meta.total_count} Connection
-            {connections.meta.total_count === 1 ? "" : "s"}
+            {connections.meta.total_count === 1 ? '' : 's'}
           </Heading>
 
           <Flex direction="column" gap="2">
@@ -53,15 +51,12 @@ const ChannelConnections = ({
           </Flex>
 
           {connections.meta && (
-            <Pagination
-              meta={connections.meta}
-              onPageChange={(page) => setCurrentPage(page)}
-            />
+            <Pagination meta={connections.meta} onPageChange={(page) => setCurrentPage(page)} />
           )}
         </Flex>
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default ChannelConnections;
+export default ChannelConnections

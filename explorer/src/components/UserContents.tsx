@@ -1,16 +1,16 @@
-import { useUserContents } from "@aredotna/react-query";
-import { LoadingIndicator } from "./LoadingIndicator";
-import ContentsGrid from "./ContentsGrid";
-import { ContentTypeFilter, ContentSort } from "@aredotna/sdk/api";
+import { useUserContents } from '@aredotna/react-query'
+import { ContentSort, type ContentTypeFilter } from '@aredotna/sdk/api'
+import ContentsGrid from './ContentsGrid'
+import { LoadingIndicator } from './LoadingIndicator'
 
 interface UserContentsProps {
-  userId: string;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-  per?: number;
-  type?: ContentTypeFilter;
-  sort?: ContentSort;
-  onSortChange?: (sort: ContentSort) => void;
+  userId: string
+  currentPage: number
+  onPageChange: (page: number) => void
+  per?: number
+  type?: ContentTypeFilter
+  sort?: ContentSort
+  onSortChange?: (sort: ContentSort) => void
 }
 
 function UserContents({
@@ -27,14 +27,14 @@ function UserContents({
     per,
     type,
     sort,
-  });
+  })
 
   if (isLoading) {
-    return <LoadingIndicator message="Loading contents..." />;
+    return <LoadingIndicator message="Loading contents..." />
   }
 
   if (!contents || contents.data.length === 0) {
-    return null;
+    return null
   }
 
   return (
@@ -46,7 +46,7 @@ function UserContents({
       sortEnum={ContentSort}
       onSortChange={onSortChange}
     />
-  );
+  )
 }
 
-export default UserContents;
+export default UserContents
