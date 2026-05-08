@@ -1,0 +1,63 @@
+import { useState } from "react";
+import { useBlockConnections } from "@aredotna/react-query";
+import { LoadingIndicator } from "./LoadingIndicator";
+import { Flex, Box, Heading } from "@radix-ui/themes";
+import { ErrorMessage } from "./ErrorMessage";
+import Pagination from "./Pagination";
+import ChannelLink from "./ChannelLink";
+
+interface BlockConnectionsProps {
+  blockId: number;
+}
+
+function BlockConnections({
+  blockId,
+}: BlockConnectionsProps): JSX.Element | null {
+  const [currentPage, setCurrentPage] = useState(1);
+  const {
+    data: connections,
+    isLoading,
+    error,
+  } = useBlockConnections(blockId, {
+    page: currentPage,
+    per: 10,
+  });
+
+  if (isLoading) {
+    return <LoadingIndicator message="Loading connections..." />;
+  }
+
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
+
+  if (!connections || connections.data.length === 0) {
+    return null;
+  }
+
+  return (
+    <Box>
+      <Flex direction="column" gap="3">
+        <Heading size="3">
+          {connections.meta.total_count} Connection
+          {connections.meta.total_count === 1 ? "" : "s"}
+        </Heading>
+
+        <Flex direction="column" gap="2">
+          {connections.data.map((channel) => (
+            <ChannelLink key={`connection-${channel.id}`} channel={channel} />
+          ))}
+        </Flex>
+
+        {connections.meta && (
+          <Pagination
+            meta={connections.meta}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        )}
+      </Flex>
+    </Box>
+  );
+}
+
+export default BlockConnections;
