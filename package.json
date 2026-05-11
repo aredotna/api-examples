@@ -1,12 +1,13 @@
 {
   "name": "arena-api-examples",
+  "description": "Self-contained example apps demonstrating ways to build on the Are.na API.",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.0.8",
   "scripts": {
     "build": "pnpm -r --if-present build",
     "dev:explorer": "pnpm --filter arena-explorer dev",
-    "dev:swimlanes": "pnpm --filter swimlane dev",
+    "dev:swimlanes": "pnpm --filter arena-swimlanes dev",
     "format": "biome format --write .",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",

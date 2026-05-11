@@ -1,7 +1,8 @@
 {
-  "name": "swimlane",
+  "name": "arena-swimlanes",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Kanban-style swimlane board built on the Are.na API.",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5174 --strictPort",

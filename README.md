@@ -15,17 +15,36 @@ See each folder's `README.md` for setup, env vars, and scripts.
 
 ## Running an example locally
 
-Install once from the repo root, then run the example you want:
+Install once from the repo root:
 
 ```sh
 pnpm install
+```
+
+Copy the env template for the example you want to run:
+
+```sh
+cp explorer/.env.example explorer/.env.local
+cp swimlanes/.env.example swimlanes/.env.local
+```
+
+Create an Are.na OAuth application and add the local redirect URI for the example:
+
+| Example   | Local redirect URI                         |
+| --------- | ------------------------------------------ |
+| Explorer  | `http://127.0.0.1:5173/oauth/callback`     |
+| Swimlanes | `http://127.0.0.1:5174/auth/callback`      |
+
+Set the OAuth client ID in the copied `.env.local` file, then run the example:
+
+```sh
 pnpm dev:explorer
 pnpm dev:swimlanes
 ```
 
 Explorer runs at `http://127.0.0.1:5173`; swimlanes runs at `http://127.0.0.1:5174`.
 
-You can also run example scripts directly with `pnpm --filter arena-explorer <script>` or `pnpm --filter swimlane <script>`.
+You can also run example scripts directly with `pnpm --filter arena-explorer <script>` or `pnpm --filter arena-swimlanes <script>`.
 
 ## Tooling
 
@@ -47,6 +66,9 @@ Each example is deployed as its own Vercel project. When creating a project on V
 2. Set **Root Directory** to the example folder (e.g. `explorer` or `swimlanes`).
 3. Vercel will pick up the example's own `vercel.json` and `package.json`, using the root pnpm lockfile.
 4. Set the example's environment variables (see its `.env.example`).
+5. Add the deployed callback URL to the Are.na OAuth app:
+   - Explorer: `https://<your-project>.vercel.app/oauth/callback`
+   - Swimlanes: `https://<your-project>.vercel.app/auth/callback`
 
 Pushes to `main` will trigger deploys for every linked Vercel project, but each one only rebuilds when files inside its root directory change.
 

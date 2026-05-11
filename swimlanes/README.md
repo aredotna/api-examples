@@ -1,4 +1,4 @@
-# Swimlane
+# Are.na Swimlanes
 
 A kanban-style swimlane board built on the Are.na API. Channels become lanes, blocks become cards, and connection metadata tracks card placement and state.
 
@@ -39,6 +39,25 @@ pnpm dev
 ```
 
 The app runs at `http://127.0.0.1:5174`.
+
+## Configuration
+
+`.env.local` should contain:
+
+```sh
+VITE_ARENA_CLIENT_ID=your_arena_oauth_client_id
+VITE_ARENA_API_BASE=https://api.are.na
+VITE_ARENA_AUTHORIZATION_BASE=https://www.are.na
+VITE_ARENA_REDIRECT_URI=http://127.0.0.1:5174/auth/callback
+```
+
+For local API development, set `VITE_ARENA_API_BASE=http://127.0.0.1:3111`. Set `VITE_ARENA_AUTHORIZATION_BASE` only when pointing OAuth authorization at a non-production Are.na host.
+
+For Vercel, also register the deployed callback URL in your Are.na OAuth application:
+
+```text
+https://<your-project>.vercel.app/auth/callback
+```
 
 ## Available Scripts
 
