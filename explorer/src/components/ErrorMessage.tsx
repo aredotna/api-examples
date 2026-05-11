@@ -2,7 +2,7 @@ import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import { Callout } from '@radix-ui/themes'
 
 export const ErrorMessage = ({ error }: { error: Error }) => {
-  const status = (error as any).response?.status
+  const status = (error as { response?: { status?: number } }).response?.status
 
   return (
     <Callout.Root variant="surface" color="red">

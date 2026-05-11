@@ -54,11 +54,12 @@ export function AddBlockDialog({ channelId, open, onOpenChange }: AddBlockDialog
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="column" gap="3">
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
+            <div>
+              <Text as="label" htmlFor="add-block-content" size="2" mb="1" weight="bold">
                 Content
               </Text>
               <TextArea
+                id="add-block-content"
                 placeholder="Paste a URL or write something..."
                 rows={4}
                 autoFocus
@@ -67,7 +68,7 @@ export function AddBlockDialog({ channelId, open, onOpenChange }: AddBlockDialog
               <Text as="div" size="1" color="gray" mt="1">
                 URLs become link/image/embed blocks. Text becomes a text block.
               </Text>
-            </label>
+            </div>
 
             {createBlock.error && (
               <Text color="red" size="2">

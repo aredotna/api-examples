@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useContext, useEffect, useReducer } from 'react'
+import { createContext, type ReactNode, useContext, useEffect, useReducer, useRef } from 'react'
 
 // Generic types for the context
 export interface ContentViewerState<TypeEnum, SortEnum> {
@@ -20,9 +20,7 @@ interface ContentViewerContextValue<TypeEnum, SortEnum> {
   setSort: (sort: SortEnum) => void
 }
 
-const ContentViewerContext = createContext<ContentViewerContextValue<any, any> | undefined>(
-  undefined,
-)
+const ContentViewerContext = createContext<unknown>(undefined)
 
 function createContentViewerReducer<TypeEnum, SortEnum>() {
   return (
@@ -61,10 +59,14 @@ export function ContentViewerProvider<TypeEnum, SortEnum>({
 }: ContentViewerProviderProps<TypeEnum, SortEnum>) {
   const reducer = createContentViewerReducer<TypeEnum, SortEnum>()
   const [state, dispatch] = useReducer(reducer, initialState)
+  const previousResourceId = useRef<string | null>(null)
 
   // Reset to page 1 when resourceId changes
   useEffect(() => {
-    dispatch({ type: 'RESET_PAGE' })
+    if (previousResourceId.current !== resourceId) {
+      previousResourceId.current = resourceId
+      dispatch({ type: 'RESET_PAGE' })
+    }
   }, [resourceId])
 
   const value: ContentViewerContextValue<TypeEnum, SortEnum> = {
@@ -79,7 +81,7 @@ export function ContentViewerProvider<TypeEnum, SortEnum>({
 
 export function useContentViewer<TypeEnum, SortEnum>() {
   const context = useContext(ContentViewerContext)
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useContentViewer must be used within a ContentViewerProvider')
   }
   return context as ContentViewerContextValue<TypeEnum, SortEnum>

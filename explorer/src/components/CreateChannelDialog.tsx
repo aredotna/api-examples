@@ -55,30 +55,32 @@ export function CreateChannelDialog({ open, onOpenChange }: CreateChannelDialogP
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="column" gap="3">
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
+            <div>
+              <Text as="label" htmlFor="create-channel-title" size="2" mb="1" weight="bold">
                 Title
               </Text>
               <TextField.Root
+                id="create-channel-title"
                 placeholder="Channel title"
                 autoFocus
                 {...register('title', { required: true })}
               />
-            </label>
+            </div>
 
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
+            <div>
+              <Text as="label" htmlFor="create-channel-description" size="2" mb="1" weight="bold">
                 Description
               </Text>
               <TextArea
+                id="create-channel-description"
                 placeholder="Optional description (supports markdown)"
                 rows={3}
                 {...register('description')}
               />
-            </label>
+            </div>
 
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
+            <div>
+              <Text as="div" id="create-channel-visibility-label" size="2" mb="1" weight="bold">
                 Visibility
               </Text>
               <Controller
@@ -86,7 +88,10 @@ export function CreateChannelDialog({ open, onOpenChange }: CreateChannelDialogP
                 control={control}
                 render={({ field }) => (
                   <Select.Root value={field.value} onValueChange={field.onChange}>
-                    <Select.Trigger style={{ width: '100%' }} />
+                    <Select.Trigger
+                      aria-labelledby="create-channel-visibility-label"
+                      style={{ width: '100%' }}
+                    />
                     <Select.Content>
                       <Select.Item value={ChannelVisibility.CLOSED}>
                         Closed — Anyone can view, only collaborators can add
@@ -101,7 +106,7 @@ export function CreateChannelDialog({ open, onOpenChange }: CreateChannelDialogP
                   </Select.Root>
                 )}
               />
-            </label>
+            </div>
 
             {createChannel.error && (
               <Text color="red" size="2">

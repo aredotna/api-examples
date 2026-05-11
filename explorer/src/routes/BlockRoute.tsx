@@ -11,7 +11,7 @@ function BlockRoute(): JSX.Element {
 
   const blockId = id ? parseInt(id, 10) : null
 
-  if (blockId === null || isNaN(blockId)) {
+  if (blockId === null || Number.isNaN(blockId)) {
     return <ErrorMessage error={new Error('Invalid block ID')} />
   }
 

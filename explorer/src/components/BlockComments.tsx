@@ -17,6 +17,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link as RouterLink } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { ApiHtml } from './ApiHtml'
 import { ErrorMessage } from './ErrorMessage'
 import { LoadingIndicator } from './LoadingIndicator'
 import Pagination from './Pagination'
@@ -73,7 +74,7 @@ function CommentItem({ comment, onDelete, isDeleting, canDelete }: CommentItemPr
           )}
         </Flex>
 
-        {comment.body && <Text size="2" dangerouslySetInnerHTML={{ __html: comment.body.html }} />}
+        {comment.body && <ApiHtml html={comment.body.html} size="2" />}
       </Flex>
     </Card>
   )

@@ -1,6 +1,7 @@
 import { useBlock } from '@aredotna/react-query'
 import { ExternalLinkIcon } from '@radix-ui/react-icons'
 import { Box, Card, Flex, Heading, Separator, Text } from '@radix-ui/themes'
+import { ApiHtml } from './ApiHtml'
 import BlockComments from './BlockComments'
 import BlockConnections from './BlockConnections'
 import { DefinitionList } from './DefinitionList'
@@ -128,13 +129,13 @@ function BlockViewer({ blockId }: BlockViewerProps): JSX.Element {
           />
         )}
 
-        {block.type === 'Text' && <Text dangerouslySetInnerHTML={{ __html: block.content.html }} />}
+        {block.type === 'Text' && <ApiHtml html={block.content.html} />}
 
         {block.description && (
           <>
             <Separator size="4" />
 
-            <Text dangerouslySetInnerHTML={{ __html: block.description.html }} />
+            <ApiHtml html={block.description.html} />
           </>
         )}
 

@@ -1,5 +1,6 @@
 import { useGroup } from '@aredotna/react-query'
-import { Box, Card, Flex, Heading, Separator, Text } from '@radix-ui/themes'
+import { Box, Card, Flex, Heading, Separator } from '@radix-ui/themes'
+import { ApiHtml } from './ApiHtml'
 import { DefinitionList } from './DefinitionList'
 import { ErrorMessage } from './ErrorMessage'
 import { LoadingIndicator } from './LoadingIndicator'
@@ -32,7 +33,7 @@ function GroupViewer({ groupId }: GroupViewerProps): JSX.Element {
       <Flex direction="column" gap="4">
         <Heading size="6">{group.name}</Heading>
 
-        {group.bio && <Text dangerouslySetInnerHTML={{ __html: group.bio.html }} />}
+        {group.bio && <ApiHtml html={group.bio.html} />}
 
         <Separator size="4" />
 

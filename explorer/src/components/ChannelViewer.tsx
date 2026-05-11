@@ -1,9 +1,10 @@
 import { useChannel } from '@aredotna/react-query'
 import { ChannelContentSort } from '@aredotna/sdk/api'
-import { Box, Button, Card, Flex, Heading, Separator, Text } from '@radix-ui/themes'
+import { Box, Button, Card, Flex, Heading, Separator } from '@radix-ui/themes'
 import { useState } from 'react'
 import { ContentViewerProvider, useContentViewer } from '../contexts/ContentViewerContext'
 import { AddBlockDialog } from './AddBlockDialog'
+import { ApiHtml } from './ApiHtml'
 import ChannelConnections from './ChannelConnections'
 import ChannelContents from './ChannelContents'
 import { ChannelUploadDropzone } from './ChannelUploadDropzone'
@@ -60,9 +61,7 @@ function ChannelViewerContent({ channelId }: ChannelViewerProps): JSX.Element {
           </Heading>
         </Flex>
 
-        {channel.description && (
-          <Text dangerouslySetInnerHTML={{ __html: channel.description.html }} />
-        )}
+        {channel.description && <ApiHtml html={channel.description.html} />}
 
         <Separator size="4" />
 

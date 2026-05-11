@@ -42,74 +42,70 @@ function ContentsGrid<TSortEnum extends string>({
   channelId,
 }: ContentsGridProps<TSortEnum>): JSX.Element | null {
   return (
-    <>
-      <Flex direction="column" gap="3">
-        {meta && (
-          <Flex gap="3" align="center" justify="between" wrap="wrap">
-            <Pagination meta={meta} onPageChange={onPageChange} />
+    <Flex direction="column" gap="3">
+      {meta && (
+        <Flex gap="3" align="center" justify="between" wrap="wrap">
+          <Pagination meta={meta} onPageChange={onPageChange} />
 
-            {sort && sortEnum && onSortChange && (
-              <Select.Root
-                value={sort}
-                onValueChange={(value) => {
-                  onSortChange(value as TSortEnum)
-                }}
-              >
-                <Select.Trigger />
+          {sort && sortEnum && onSortChange && (
+            <Select.Root
+              value={sort}
+              onValueChange={(value) => {
+                onSortChange(value as TSortEnum)
+              }}
+            >
+              <Select.Trigger />
 
-                <Select.Content>
-                  {Object.values(sortEnum).map((s) => (
-                    <Select.Item key={s} value={s}>
-                      {getSortLabel(s)}
-                    </Select.Item>
-                  ))}
-                </Select.Content>
-              </Select.Root>
-            )}
-          </Flex>
-        )}
+              <Select.Content>
+                {Object.values(sortEnum).map((s) => (
+                  <Select.Item key={s} value={s}>
+                    {getSortLabel(s)}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Root>
+          )}
+        </Flex>
+      )}
 
-        <Grid columns={{ initial: '2', sm: '3', md: '4', lg: '5' }} gap="2">
-          {data.map((item) => {
-            if (item.type === 'Channel') {
-              return (
-                <ChannelCell
-                  key={`channel-${item.id}`}
-                  channel={item as Channel}
-                  channelId={channelId}
-                />
-              )
-            }
+      <Grid columns={{ initial: '2', sm: '3', md: '4', lg: '5' }} gap="2">
+        {data.map((item) => {
+          if (item.type === 'Channel') {
             return (
-              <BlockCell key={`block-${item.id}`} block={item as Block} channelId={channelId} />
+              <ChannelCell
+                key={`channel-${item.id}`}
+                channel={item as Channel}
+                channelId={channelId}
+              />
             )
-          })}
-        </Grid>
+          }
+          return <BlockCell key={`block-${item.id}`} block={item as Block} channelId={channelId} />
+        })}
+      </Grid>
 
-        {meta && (
-          <Flex gap="3" align="center" justify="between" wrap="wrap">
-            <Pagination meta={meta} onPageChange={onPageChange} />
-            {sort && sortEnum && onSortChange && (
-              <Select.Root
-                value={sort}
-                onValueChange={(value) => {
-                  onSortChange(value as TSortEnum)
-                }}
-              >
-                <Select.Trigger />
-                <Select.Content>
-                  {Object.values(sortEnum).map((s) => (
-                    <Select.Item key={s} value={s}>
-                      {getSortLabel(s)}
-                    </Select.Item>
-                  ))}
-                </Select.Content>
-              </Select.Root>
-            )}
-          </Flex>
-        )}
-      </Flex>
-    </>
+      {meta && (
+        <Flex gap="3" align="center" justify="between" wrap="wrap">
+          <Pagination meta={meta} onPageChange={onPageChange} />
+          {sort && sortEnum && onSortChange && (
+            <Select.Root
+              value={sort}
+              onValueChange={(value) => {
+                onSortChange(value as TSortEnum)
+              }}
+            >
+              <Select.Trigger />
+              <Select.Content>
+                {Object.values(sortEnum).map((s) => (
+                  <Select.Item key={s} value={s}>
+                    {getSortLabel(s)}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Root>
+          )}
+        </Flex>
+      )}
+    </Flex>
   )
 }
 

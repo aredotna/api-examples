@@ -63,7 +63,7 @@ export function CellActionMenu({
 
   const handleMoveToPosition = () => {
     const position = parseInt(targetPosition, 10)
-    if (!isNaN(position) && position > 0) {
+    if (!Number.isNaN(position) && position > 0) {
       moveConnection.mutate({
         id: connectionId,
         body: {

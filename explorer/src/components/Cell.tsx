@@ -3,6 +3,7 @@ import { ExclamationTriangleIcon, Link2Icon, PlayIcon } from '@radix-ui/react-ic
 import { Avatar, Badge, Box, Flex, Link, Spinner, Text } from '@radix-ui/themes'
 import { Link as RouterLink } from 'react-router-dom'
 import { channelColors } from '../lib/channelColor'
+import { ApiHtml } from './ApiHtml'
 import { CellActionMenu } from './CellActionMenu'
 import Image from './Image'
 
@@ -288,7 +289,8 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
           <Link asChild style={{ width: '100%', height: '100%' }}>
             <RouterLink to={`/block/${block.id}`} style={linkStyle}>
               <Box p="2" style={{ width: '100%', height: '100%' }}>
-                <Text
+                <ApiHtml
+                  html={block.content?.html || ''}
                   size="2"
                   color="gray"
                   style={{
@@ -297,9 +299,6 @@ export function BlockCell({ block, channelId }: BlockCellProps) {
                     WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
-                  }}
-                  dangerouslySetInnerHTML={{
-                    __html: block.content?.html || '',
                   }}
                 />
               </Box>

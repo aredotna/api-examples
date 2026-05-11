@@ -116,13 +116,16 @@ function Image({
   const src = image[size]?.src
 
   useEffect(() => {
-    setImageLoaded(false)
+    if (src) {
+      setImageLoaded(false)
+    }
   }, [src])
 
   if (!src) return null
 
   const hasGeometry = !!image.aspect_ratio
-  const hasBlurhash = !!image.blurhash
+  const blurhash = image.blurhash
+  const hasBlurhash = !!blurhash
 
   // Case 1: No geometry, no blurhash - plain image
   if (!hasGeometry && !hasBlurhash) {
@@ -180,11 +183,13 @@ function Image({
   }
 
   // Case 3: Has blurhash - sized placeholder with blurhash
+  if (!blurhash) return null
+
   return (
     <BlurhashImage
       src={src}
       alt={alt}
-      blurhash={image.blurhash!}
+      blurhash={blurhash}
       aspectRatio={image.aspect_ratio ?? undefined}
       filename={image.filename}
       style={style}
