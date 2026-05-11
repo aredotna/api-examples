@@ -3,9 +3,9 @@ import { type Dispatch, useCallback, useEffect, useMemo, useState } from 'react'
 import type { ArenaClient } from '@/api/client'
 import { beginOAuthLogin, maybeFinishOAuthCallback } from '@/auth/oauth'
 import { clearToken, loadToken } from '@/auth/session'
-import { getStoredBoardId, setStoredBoardId } from '@/domain/board-storage'
+import { clearStoredBoardId, getStoredBoardId, setStoredBoardId } from '@/domain/board-storage'
 import type { BoardModel, OAuthToken } from '@/domain/model'
-import { ensureDemoBoard, fetchBoard, fetchCurrentUser } from '@/domain/swimlaneService'
+import { fetchBoard, fetchCurrentUser } from '@/domain/swimlaneService'
 import { toErrorMessage } from '@/lib/errors'
 import type { AppAction } from '../state/app-state'
 
@@ -85,14 +85,24 @@ export const useAuth = (dispatch: Dispatch<AppAction>) => {
       try {
         const me = await fetchCurrentUser(client)
         const storedBoardId = getStoredBoardId()
-        const nextBoard = await ensureDemoBoard(client, storedBoardId)
+        let nextBoard: BoardModel | null = null
+
+        if (storedBoardId) {
+          try {
+            nextBoard = await fetchBoard(client, storedBoardId)
+          } catch {
+            clearStoredBoardId()
+          }
+        }
 
         if (cancelled) return
 
         setUser({ name: me.name, avatar: me.avatar ?? null, initials: me.initials })
         dispatch({ type: 'SET_BOARD', board: nextBoard })
         dispatch({ type: 'SET_ERROR', message: '' })
-        setStoredBoardId(nextBoard.id)
+        if (nextBoard) {
+          setStoredBoardId(nextBoard.id)
+        }
       } catch (error) {
         if (!cancelled) {
           dispatch({

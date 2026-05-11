@@ -1,4 +1,4 @@
-const FALLBACK_REDIRECT_URI = 'http://localhost:5173/auth/callback'
+const FALLBACK_REDIRECT_URI = 'http://127.0.0.1:5174/auth/callback'
 
 const resolveDefaultRedirectUri = (): string => {
   if (typeof window === 'undefined') {
@@ -9,7 +9,7 @@ const resolveDefaultRedirectUri = (): string => {
 }
 
 export const appConfig = {
-  apiBaseUrl: import.meta.env.VITE_ARENA_API_BASE ?? 'http://localhost:3111',
+  apiBaseUrl: import.meta.env.VITE_ARENA_API_BASE ?? 'http://127.0.0.1:3111',
   oauthAuthorizeUrl:
     import.meta.env.VITE_ARENA_OAUTH_AUTHORIZE_URL ?? 'https://www.are.na/oauth/authorize',
   oauthClientId: import.meta.env.VITE_ARENA_CLIENT_ID ?? '',

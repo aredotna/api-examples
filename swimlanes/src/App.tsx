@@ -3,6 +3,7 @@ import { useMemo, useReducer } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { appConfig, isOauthConfigured } from '@/config'
+import { setStoredBoardId } from '@/domain/board-storage'
 import { cardFromBoard } from '@/domain/board-transforms'
 import { type BoardModel, type CardModel, DEMO_METADATA_KEYS, type LaneModel } from '@/domain/model'
 import {
@@ -22,6 +23,7 @@ import {
 } from '@/features/swimlane/state/app-state'
 import { AddLaneDialog } from '@/features/swimlane/ui/add-lane-dialog'
 import { BoardHeader } from '@/features/swimlane/ui/board-header'
+import { BoardSetup } from '@/features/swimlane/ui/board-setup'
 import { CardSheet } from '@/features/swimlane/ui/card-sheet'
 import { CreateCardDialog } from '@/features/swimlane/ui/create-card-dialog'
 import { LaneColumn } from '@/features/swimlane/ui/lane-column'
@@ -65,6 +67,12 @@ const App = () => {
   const handleLogout = (): void => {
     removals.clearAll()
     auth.logout()
+  }
+
+  const handleBoardReady = (nextBoard: BoardModel): void => {
+    dispatch({ type: 'SET_BOARD', board: nextBoard })
+    dispatch({ type: 'SET_ERROR', message: '' })
+    setStoredBoardId(nextBoard.id)
   }
 
   const handleRefresh = async (): Promise<void> => {
@@ -464,6 +472,32 @@ const App = () => {
           </Button>
         </section>
       </main>
+    )
+  }
+
+  if (!client || (!board && isBusy)) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-background px-6">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+          <Loader2Icon className="size-4 animate-spin" />
+          Checking saved board...
+        </div>
+      </main>
+    )
+  }
+
+  if (!board) {
+    return (
+      <BoardSetup
+        client={client}
+        errorMessage={errorMessage}
+        userName={auth.user.name}
+        userAvatar={auth.user.avatar}
+        userInitials={auth.user.initials}
+        onBoardReady={handleBoardReady}
+        onError={(message) => dispatch({ type: 'SET_ERROR', message })}
+        onLogout={handleLogout}
+      />
     )
   }
 

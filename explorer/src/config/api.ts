@@ -12,8 +12,8 @@ const ENVIRONMENTS = {
     authorizationBaseUrl: 'https://staging.are.na',
   },
   local: {
-    apiBaseUrl: 'http://localhost:3111',
-    authorizationBaseUrl: 'http://localhost:3000',
+    apiBaseUrl: 'http://127.0.0.1:3111',
+    authorizationBaseUrl: 'http://127.0.0.1:3000',
   },
 } as const
 

@@ -29,7 +29,7 @@ cp .env.example .env.local
 3. Set `VITE_ARENA_CLIENT_ID` from your OAuth app and ensure the redirect URI includes:
 
 ```text
-http://localhost:5173/auth/callback
+http://127.0.0.1:5174/auth/callback
 ```
 
 4. Start dev server:
@@ -38,9 +38,11 @@ http://localhost:5173/auth/callback
 pnpm dev
 ```
 
+The app runs at `http://127.0.0.1:5174`.
+
 ## Available Scripts
 
-- `pnpm dev` - run Vite dev server
+- `pnpm dev` - run Vite dev server at `http://127.0.0.1:5174`
 - `pnpm build` - typecheck and production build
 - `pnpm typecheck` - run TypeScript project checks
 - `pnpm lint` - run Biome check
@@ -51,7 +53,8 @@ pnpm dev
 
 ## Demo Behavior
 
-- First authenticated run bootstraps one board and default lanes.
+- First authenticated run asks you to select an existing board channel or create one.
+- When creating a board, each default lane can use an existing channel or create a new one.
 - Add cards (blocks) into lanes and edit card metadata.
 - Drag cards within/across lanes (connection move/create/delete).
 - Drag lanes to reorder lane-channel connections.

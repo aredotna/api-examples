@@ -23,6 +23,8 @@ pnpm dev:explorer
 pnpm dev:swimlanes
 ```
 
+Explorer runs at `http://127.0.0.1:5173`; swimlanes runs at `http://127.0.0.1:5174`.
+
 You can also run example scripts directly with `pnpm --filter arena-explorer <script>` or `pnpm --filter swimlane <script>`.
 
 ## Tooling

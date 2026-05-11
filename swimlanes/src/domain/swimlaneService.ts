@@ -12,7 +12,6 @@ import {
   type CardDraft,
   type CardEditorDraft,
   type CardModel,
-  DEFAULT_LANES,
   DEMO_METADATA_KEYS,
   type LaneModel,
   type LaneTemplate,
@@ -30,7 +29,6 @@ const OBSOLETE_METADATA_KEYS = {
   connectionRank: 'rank',
   connectionSwimlaneKey: 'swimlane_key',
 } as const
-let pendingFreshBoard: Promise<BoardModel> | null = null
 
 const isChannel = (item: ConnectableItem): item is ArenaChannel =>
   'type' in item && item.type === 'Channel'
@@ -209,6 +207,15 @@ interface CreatedLane {
   connectionId: number
 }
 
+export interface LaneChannelSetup {
+  channelId: number | null
+  title: string
+  key: string
+  color: string
+  wipLimit: number
+  isDefault: boolean
+}
+
 const createLaneWithConnection = async (
   client: ArenaClient,
   boardId: number,
@@ -244,12 +251,40 @@ const createLaneWithConnection = async (
   }
 }
 
-export const createDemoBoard = async (client: ArenaClient): Promise<number> => {
+const connectLaneChannel = async (
+  client: ArenaClient,
+  boardId: number,
+  laneChannelId: number,
+  index: number,
+): Promise<CreatedLane> => {
+  const connections = await client.connections.create({
+    connectable_id: laneChannelId,
+    connectable_type: 'Channel',
+    channels: [
+      {
+        id: boardId,
+        position: toApiPosition(index),
+      },
+    ],
+  })
+
+  return {
+    laneId: laneChannelId,
+    connectionId: connections.data?.[0]?.id ?? -1,
+  }
+}
+
+export const createBoardWithLanes = async (
+  client: ArenaClient,
+  boardTitle: string,
+  lanes: LaneChannelSetup[],
+): Promise<BoardModel> => {
   const now = new Date()
   const quarter = `Q${Math.ceil((now.getUTCMonth() + 1) / 3)}-${now.getUTCFullYear()}`
+  const title = boardTitle.trim() || 'Swimlane Board'
 
   const board = await client.channels.create({
-    title: 'Swimlane Board',
+    title,
     visibility: 'private',
     description: 'Product swimlane board backed by channel/block/connection metadata.',
     metadata: {
@@ -259,33 +294,15 @@ export const createDemoBoard = async (client: ArenaClient): Promise<number> => {
     },
   })
 
-  for (const [index, lane] of DEFAULT_LANES.entries()) {
-    await createLaneWithConnection(client, board.id, lane, index)
-  }
-
-  return board.id
-}
-
-export const ensureDemoBoard = async (
-  client: ArenaClient,
-  currentBoardId: number | null,
-): Promise<BoardModel> => {
-  if (currentBoardId) {
-    try {
-      return await fetchBoard(client, currentBoardId)
-    } catch {
-      // fall through and bootstrap a fresh board
+  for (const [index, lane] of lanes.entries()) {
+    if (lane.channelId !== null) {
+      await connectLaneChannel(client, board.id, lane.channelId, index)
+    } else {
+      await createLaneWithConnection(client, board.id, lane, index)
     }
   }
 
-  pendingFreshBoard ??= (async () => {
-    const boardId = await createDemoBoard(client)
-    return fetchBoard(client, boardId)
-  })().finally(() => {
-    pendingFreshBoard = null
-  })
-
-  return pendingFreshBoard
+  return fetchBoard(client, board.id)
 }
 
 export const fetchCurrentUser = async (client: ArenaClient): Promise<User> => client.me()
