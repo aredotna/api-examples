@@ -1,6 +1,13 @@
-import { appConfig } from '../config'
+import {
+  generatePKCE,
+  generateState,
+  OAuthError,
+  OAuthMissingCodeError,
+  OAuthProviderError,
+  parseOAuthCallback,
+} from '@aredotna/sdk/oauth'
+import { getOAuthClient } from '../config'
 import type { OAuthToken } from '../domain/model'
-import { createPkceTransaction } from './pkce'
 import {
   clearPkceTransaction,
   loadPkceTransaction,
@@ -8,35 +15,25 @@ import {
   saveToken,
 } from './session'
 
-const OAUTH_RESPONSE_TYPE = 'code'
 const exchangeByCode = new Map<string, Promise<OAuthToken>>()
 
-export class OAuthError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'OAuthError'
-  }
-}
-
 export const beginOAuthLogin = async (): Promise<never> => {
-  const tx = await createPkceTransaction()
+  const { codeVerifier, codeChallenge } = await generatePKCE()
+  const state = generateState()
 
   savePkceTransaction({
-    state: tx.state,
-    codeVerifier: tx.codeVerifier,
+    state,
+    codeVerifier,
     createdAt: Date.now(),
   })
 
-  const url = new URL(appConfig.oauthAuthorizeUrl)
-  url.searchParams.set('client_id', appConfig.oauthClientId)
-  url.searchParams.set('redirect_uri', appConfig.oauthRedirectUri)
-  url.searchParams.set('response_type', OAUTH_RESPONSE_TYPE)
-  url.searchParams.set('scope', 'write')
-  url.searchParams.set('state', tx.state)
-  url.searchParams.set('code_challenge', tx.codeChallenge)
-  url.searchParams.set('code_challenge_method', 'S256')
-
-  window.location.assign(url.toString())
+  window.location.assign(
+    getOAuthClient().authorizeUrl({
+      codeChallenge,
+      scope: 'write',
+      state,
+    }),
+  )
 
   throw new OAuthError('Redirecting to OAuth provider')
 }
@@ -49,78 +46,46 @@ export const maybeFinishOAuthCallback = async (callbackUrl: URL): Promise<OAuthT
     return null
   }
 
-  const error = callbackUrl.searchParams.get('error')
-  if (error) {
+  const callback = parseOAuthCallback(callbackUrl)
+  if (!callback.ok) {
     clearPkceTransaction()
-    throw new OAuthError(
-      callbackUrl.searchParams.get('error_description') ?? `OAuth error: ${error}`,
-    )
+    throw callback.error === 'missing_code'
+      ? new OAuthMissingCodeError()
+      : new OAuthProviderError(callback)
   }
 
-  const code = callbackUrl.searchParams.get('code')
-  const state = callbackUrl.searchParams.get('state')
   const tx = loadPkceTransaction()
 
-  if (!code || !state || !tx) {
+  if (!callback.state || !tx) {
     clearPkceTransaction()
     throw new OAuthError('Missing PKCE transaction or callback parameters.')
   }
 
-  if (state !== tx.state) {
-    clearPkceTransaction()
-    throw new OAuthError('Invalid OAuth state parameter.')
-  }
-
-  const existingExchange = exchangeByCode.get(code)
+  const callbackState = callback.state
+  const existingExchange = exchangeByCode.get(callback.code)
   if (existingExchange) {
     return existingExchange
   }
 
   const exchangePromise = (async (): Promise<OAuthToken> => {
-    const form = new URLSearchParams({
-      grant_type: 'authorization_code',
-      client_id: appConfig.oauthClientId,
-      code,
-      redirect_uri: appConfig.oauthRedirectUri,
-      code_verifier: tx.codeVerifier,
+    const token = await getOAuthClient().exchangeCode({
+      code: callback.code,
+      codeVerifier: tx.codeVerifier,
+      expectedState: tx.state,
+      state: callbackState,
     })
 
-    const response = await fetch(`${appConfig.apiBaseUrl}/v3/oauth/token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: form,
-    })
+    saveToken(token)
 
-    const data = (await response.json()) as
-      | OAuthToken
-      | {
-          error?: string
-          error_description?: string
-        }
-
-    if (!response.ok || !('access_token' in data)) {
-      clearPkceTransaction()
-      const message =
-        'error_description' in data && typeof data.error_description === 'string'
-          ? data.error_description
-          : 'OAuth token exchange failed.'
-
-      throw new OAuthError(message)
-    }
-
-    clearPkceTransaction()
-    saveToken(data)
-
-    return data
+    return token
   })()
 
-  exchangeByCode.set(code, exchangePromise)
+  exchangeByCode.set(callback.code, exchangePromise)
 
   try {
     return await exchangePromise
   } finally {
-    exchangeByCode.delete(code)
+    clearPkceTransaction()
+    exchangeByCode.delete(callback.code)
   }
 }

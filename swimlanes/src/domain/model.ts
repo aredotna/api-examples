@@ -1,11 +1,7 @@
+import type { OAuthTokenResponse } from '@aredotna/sdk/oauth'
 import type { MetadataRecord } from './metadata'
 
-export interface OAuthToken {
-  access_token: string
-  token_type: 'Bearer'
-  scope: string
-  created_at: number
-}
+export type OAuthToken = OAuthTokenResponse
 
 export interface LaneTemplate {
   key: string
