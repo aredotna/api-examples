@@ -11,12 +11,14 @@
 
 # Dependencies
 node_modules/
+.pnpm-store/
 
 # Build output
 dist/
 dist-ssr/
 build/
 .next/
+out/
 .vercel/
 
 # Local env (each example may also have its own .env.example committed)

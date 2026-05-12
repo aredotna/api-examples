@@ -1,0 +1,244 @@
+:root {
+  color-scheme: light;
+  --background: #fff;
+  --foreground: #000;
+  --line: #000;
+  --placeholder: #f2f2f2;
+  --surface: #fff;
+  --max-width: 1280px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+body {
+  margin: 0;
+}
+
+.route-progress {
+  background: var(--foreground);
+  height: 2px;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  width: 100%;
+  z-index: 100;
+}
+
+.route-progress[data-phase="loading"] {
+  opacity: 1;
+  transform: scaleX(0.88);
+  transition:
+    opacity 140ms ease,
+    transform 8s cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+.route-progress[data-phase="complete"] {
+  opacity: 0;
+  transform: scaleX(1);
+  transition:
+    opacity 280ms ease 140ms,
+    transform 180ms ease-out;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+iframe,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+main {
+  margin: 0 auto;
+  max-width: var(--max-width);
+  padding: 4rem 2rem 6rem;
+}
+
+.site-header {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin: 0 auto;
+  max-width: var(--max-width);
+  padding: 2rem;
+}
+
+.brand {
+  font-weight: 400;
+}
+
+.subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+}
+
+.nav-list {
+  display: contents;
+  font-size: 1rem;
+}
+
+.nav-link[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.subnav {
+  margin: 3rem 0;
+}
+
+.page-header {
+  margin-bottom: 5rem;
+}
+
+.page-header h1 {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: inherit;
+  margin: 0;
+}
+
+.page-header .description {
+  max-width: 36rem;
+}
+
+.block {
+  background: var(--surface);
+  display: grid;
+  gap: 2rem;
+}
+
+.block-header {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr auto;
+}
+
+.block-header h2 {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: inherit;
+  margin: 0;
+}
+
+.block-header .description {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.eyebrow,
+.permalink,
+.source-link,
+.attachment p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.block-image,
+.preview-image {
+  height: auto;
+  width: 100%;
+}
+
+.link-preview,
+.attachment {
+  display: grid;
+  gap: 1rem;
+}
+
+.embed {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  width: 100%;
+}
+
+.embed iframe {
+  height: 100%;
+  width: 100%;
+}
+
+.prose {
+  max-width: 68ch;
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose > :last-child {
+  margin-bottom: 0;
+}
+
+.channel-card {
+  background: transparent;
+}
+
+.thumbnail-grid {
+  column-gap: 4rem;
+  columns: 3 220px;
+}
+
+.thumbnail {
+  background: var(--surface);
+  color: inherit;
+  display: inline-block;
+  margin: 0 0 4rem;
+  overflow: hidden;
+  width: 100%;
+}
+
+.thumbnail-media {
+  background: var(--placeholder);
+  display: block;
+  width: 100%;
+}
+
+.thumbnail-media img {
+  height: auto;
+  width: 100%;
+}
+
+.thumbnail-fallback {
+  background: var(--placeholder);
+  border: 1px solid var(--line);
+  display: block;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.thumbnail-meta {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .site-header,
+  .block-header {
+    display: grid;
+  }
+
+  .thumbnail-grid {
+    columns: 1;
+  }
+}

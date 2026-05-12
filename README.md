@@ -9,6 +9,7 @@ Each example lives in its own folder, picks its own stack and tooling, and deplo
 | Folder                      | What it shows                                                                                                                                 | Stack                                                      |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | [`explorer/`](./explorer)   | Generic Are.na client for browsing channels, blocks, and users — built on the published `@aredotna/sdk` and `@aredotna/react-query` packages. | Vite, React 18, pnpm, `@aredotna/sdk`                      |
+| [`portfolio/`](./portfolio) | Minimal static portfolio site generated from one public Are.na channel, with block permalinks, OG tags, and RSS.                              | Next.js 15, React 19, pnpm, `@aredotna/sdk`                |
 | [`swimlanes/`](./swimlanes) | Kanban-style board built on the published `@aredotna/sdk` and `@aredotna/react-query` packages.                                               | Vite, React 19, pnpm, Tailwind, shadcn/ui, `@aredotna/sdk` |
 
 See each folder's `README.md` for setup, env vars, and scripts.
@@ -25,6 +26,7 @@ Copy the env template for the example you want to run:
 
 ```sh
 cp explorer/.env.example explorer/.env.local
+cp portfolio/.env.example portfolio/.env.local
 cp swimlanes/.env.example swimlanes/.env.local
 ```
 
@@ -39,12 +41,13 @@ Set the OAuth client ID in the copied `.env.local` file, then run the example:
 
 ```sh
 pnpm dev:explorer
+pnpm dev:portfolio
 pnpm dev:swimlanes
 ```
 
-Explorer runs at `http://127.0.0.1:5173`; swimlanes runs at `http://127.0.0.1:5174`.
+Explorer runs at `http://127.0.0.1:5173`; portfolio runs at `http://127.0.0.1:5175`; swimlanes runs at `http://127.0.0.1:5174`.
 
-You can also run example scripts directly with `pnpm --filter arena-explorer <script>` or `pnpm --filter arena-swimlanes <script>`.
+You can also run example scripts directly with `pnpm --filter arena-explorer <script>`, `pnpm --filter arena-portfolio <script>`, or `pnpm --filter arena-swimlanes <script>`.
 
 ## Tooling
 

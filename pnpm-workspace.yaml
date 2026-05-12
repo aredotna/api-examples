@@ -1,6 +1,8 @@
 packages:
   - explorer
+  - portfolio
   - swimlanes
 allowBuilds:
   esbuild: true
   msw: true
+  sharp: false

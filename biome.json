@@ -5,7 +5,9 @@
       "**/*.{ts,tsx,js,jsx,json,css,md}",
       "!**/dist",
       "!**/dist-ssr",
+      "!**/.next",
       "!**/node_modules",
+      "!**/out",
       "!swimlanes/src/components/ui"
     ]
   },
