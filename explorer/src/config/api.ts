@@ -1,38 +1,18 @@
 import type { ArenaOptions, TokenProvider } from '@aredotna/sdk'
 
-export type ArenaEnvironment = 'production' | 'staging' | 'local'
-
-const ENVIRONMENTS = {
-  production: {
-    apiBaseUrl: 'https://api.are.na',
-    authorizationBaseUrl: 'https://www.are.na',
-  },
-  staging: {
-    apiBaseUrl: 'https://staging-api.are.na',
-    authorizationBaseUrl: 'https://staging.are.na',
-  },
-  local: {
-    apiBaseUrl: 'http://127.0.0.1:3111',
-    authorizationBaseUrl: 'http://127.0.0.1:3000',
-  },
+export const arenaConfig = {
+  apiBaseUrl: import.meta.env.VITE_ARENA_API_BASE ?? 'https://api.are.na',
+  authorizationBaseUrl: import.meta.env.VITE_ARENA_AUTHORIZATION_BASE ?? 'https://www.are.na',
 } as const
 
-export function getArenaEnvironment(): ArenaEnvironment {
-  const environment = import.meta.env.VITE_API_ENV
-  return environment === 'local' || environment === 'staging' ? environment : 'production'
+export function getArenaConfig() {
+  return arenaConfig
 }
 
-export function getArenaEnvironmentConfig(environment: ArenaEnvironment = getArenaEnvironment()) {
-  return ENVIRONMENTS[environment]
-}
-
-export function createArenaOptions(options?: {
-  environment?: ArenaEnvironment
-  token?: TokenProvider
-}): ArenaOptions {
-  const { environment = getArenaEnvironment(), token } = options || {}
+export function createArenaOptions(options?: { token?: TokenProvider }): ArenaOptions {
+  const { token } = options || {}
   return {
-    baseUrl: getArenaEnvironmentConfig(environment).apiBaseUrl,
+    baseUrl: arenaConfig.apiBaseUrl,
     token,
   }
 }

@@ -14,7 +14,7 @@ export const appConfig = {
   apiBaseUrl: import.meta.env.VITE_ARENA_API_BASE ?? 'https://api.are.na',
   oauthAuthorizationBaseUrl: import.meta.env.VITE_ARENA_AUTHORIZATION_BASE ?? 'https://www.are.na',
   oauthClientId: import.meta.env.VITE_ARENA_CLIENT_ID ?? '',
-  oauthRedirectUri: import.meta.env.VITE_ARENA_REDIRECT_URI ?? resolveDefaultRedirectUri(),
+  oauthRedirectUri: resolveDefaultRedirectUri(),
 } as const
 
 export const getOAuthClient = (): OAuth =>

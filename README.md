@@ -30,14 +30,14 @@ cp portfolio/.env.example portfolio/.env.local
 cp swimlanes/.env.example swimlanes/.env.local
 ```
 
-Create an Are.na OAuth application and add the local redirect URI for the example:
+Explorer and Swimlanes use OAuth. Create an Are.na OAuth application with `write` scope and add the local redirect URI for the example:
 
 | Example   | Local redirect URI                         |
 | --------- | ------------------------------------------ |
-| Explorer  | `http://127.0.0.1:5173/oauth/callback`     |
+| Explorer  | `http://127.0.0.1:5173/auth/callback`      |
 | Swimlanes | `http://127.0.0.1:5174/auth/callback`      |
 
-Set the OAuth client ID in the copied `.env.local` file, then run the example:
+Set `VITE_ARENA_CLIENT_ID` in the copied `.env.local` file for OAuth examples. Portfolio does not use OAuth; set its public channel and site URL instead. Then run the example:
 
 ```sh
 pnpm dev:explorer
@@ -70,7 +70,7 @@ Each example is deployed as its own Vercel project. When creating a project on V
 3. Vercel will pick up the example's own `vercel.json` and `package.json`, using the root pnpm lockfile.
 4. Set the example's environment variables (see its `.env.example`).
 5. Add the deployed callback URL to the Are.na OAuth app:
-   - Explorer: `https://<your-project>.vercel.app/oauth/callback`
+   - Explorer: `https://<your-project>.vercel.app/auth/callback`
    - Swimlanes: `https://<your-project>.vercel.app/auth/callback`
 
 Pushes to `main` will trigger deploys for every linked Vercel project, but each one only rebuilds when files inside its root directory change.

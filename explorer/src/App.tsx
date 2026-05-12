@@ -75,7 +75,7 @@ function App(): JSX.Element {
                       <Route path="following" element={<UserFollowingRoute />} />
                     </Route>
                     <Route path="/group/:id" element={<GroupRoute />} />
-                    <Route path="/oauth/callback" element={<OAuthCallbackRoute />} />
+                    <Route path="/auth/callback" element={<OAuthCallbackRoute />} />
                     <Route path="*" element={<NotFoundRoute />} />
                   </Routes>
                 </main>

@@ -1,13 +1,13 @@
 import { OAuth } from '@aredotna/sdk/oauth'
-import { type ArenaEnvironment, getArenaEnvironment, getArenaEnvironmentConfig } from './api'
+import { getArenaConfig } from './api'
 
-export function getOAuthClient(environment: ArenaEnvironment = getArenaEnvironment()): OAuth {
-  const { apiBaseUrl, authorizationBaseUrl } = getArenaEnvironmentConfig(environment)
-  const clientId = import.meta.env.VITE_OAUTH_CLIENT_ID?.trim()
+export function getOAuthClient(): OAuth {
+  const { apiBaseUrl, authorizationBaseUrl } = getArenaConfig()
+  const clientId = import.meta.env.VITE_ARENA_CLIENT_ID?.trim()
 
   if (!clientId) {
     throw new Error(
-      'VITE_OAUTH_CLIENT_ID is not set. Please register an OAuth application and add the client ID to your .env file.',
+      'VITE_ARENA_CLIENT_ID is not set. Please register an OAuth application and add the client ID to your .env file.',
     )
   }
 
@@ -22,7 +22,7 @@ export function getOAuthClient(environment: ArenaEnvironment = getArenaEnvironme
 }
 
 export function getOAuthRedirectUri(): string {
-  return import.meta.env.VITE_OAUTH_REDIRECT_URI || `${window.location.origin}/oauth/callback`
+  return `${window.location.origin}/auth/callback`
 }
 
 export function isOnOAuthRedirectOrigin(): boolean {

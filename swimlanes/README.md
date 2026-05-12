@@ -26,7 +26,7 @@ pnpm install
 cp .env.example .env.local
 ```
 
-3. Set `VITE_ARENA_CLIENT_ID` from your OAuth app and ensure the redirect URI includes:
+3. Set `VITE_ARENA_CLIENT_ID` from your OAuth app and ensure the app has `write` scope and this redirect URI:
 
 ```text
 http://127.0.0.1:5174/auth/callback
@@ -42,14 +42,20 @@ The app runs at `http://127.0.0.1:5174`.
 
 ## Configuration
 
-`.env.local` should contain:
+`.env.local` only requires your OAuth client ID:
 
 ```sh
 VITE_ARENA_CLIENT_ID=your_arena_oauth_client_id
+```
+
+Optional API host overrides:
+
+```sh
 VITE_ARENA_API_BASE=https://api.are.na
 VITE_ARENA_AUTHORIZATION_BASE=https://www.are.na
-VITE_ARENA_REDIRECT_URI=http://127.0.0.1:5174/auth/callback
 ```
+
+The redirect URI is derived from the current origin as `/auth/callback`; register that callback URL with Are.na.
 
 For local API development, set `VITE_ARENA_API_BASE=http://127.0.0.1:3111`. Set `VITE_ARENA_AUTHORIZATION_BASE` only when pointing OAuth authorization at a non-production Are.na host.
 

@@ -7,13 +7,15 @@ This repository contains self-contained Are.na API example apps. Each example sh
 ```sh
 pnpm install
 cp explorer/.env.example explorer/.env.local
+cp portfolio/.env.example portfolio/.env.local
 cp swimlanes/.env.example swimlanes/.env.local
 ```
 
-Set the OAuth client ID for the example you are working on, then run it from the root:
+Set the OAuth client ID for the OAuth example you are working on, or the channel/site settings for Portfolio, then run it from the root:
 
 ```sh
 pnpm dev:explorer
+pnpm dev:portfolio
 pnpm dev:swimlanes
 ```
 
