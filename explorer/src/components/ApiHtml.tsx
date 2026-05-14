@@ -35,6 +35,7 @@ const ALLOWED_TAGS = new Set([
 ])
 
 const SAFE_URL_PROTOCOLS = new Set(['http:', 'https:', 'mailto:', 'tel:'])
+const VOID_TAGS = new Set(['br'])
 
 function isSafeUrl(href: string): boolean {
   if (href.startsWith('/') || href.startsWith('#')) return true
@@ -63,6 +64,10 @@ function renderNode(node: ChildNode, key: string): ReactNode {
 
   if (!ALLOWED_TAGS.has(tagName)) {
     return children
+  }
+
+  if (VOID_TAGS.has(tagName)) {
+    return createElement(tagName, { key })
   }
 
   if (tagName === 'a') {
