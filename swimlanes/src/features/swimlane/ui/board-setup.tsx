@@ -33,7 +33,6 @@ const initialLaneDrafts = (): LaneChannelDraft[] =>
     title: lane.title,
     key: lane.key,
     color: lane.color,
-    wipLimit: lane.wipLimit,
     isDefault: lane.isDefault,
     selectedChannel: null,
   }))
@@ -251,12 +250,11 @@ export const BoardSetup = ({
 
     try {
       const laneSetup = laneDrafts.map(
-        ({ channelId, title, key, color, wipLimit, isDefault }): LaneChannelSetup => ({
+        ({ channelId, title, key, color, isDefault }): LaneChannelSetup => ({
           channelId,
           title,
           key,
           color,
-          wipLimit,
           isDefault,
         }),
       )

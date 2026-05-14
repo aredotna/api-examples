@@ -274,11 +274,9 @@ const App = () => {
                 ...l,
                 title: draft.title,
                 color: draft.color,
-                wipLimit: draft.wipLimit,
                 metadata: {
                   ...l.metadata,
                   [DEMO_METADATA_KEYS.laneColor]: draft.color,
-                  [DEMO_METADATA_KEYS.laneWipLimit]: String(draft.wipLimit),
                   [DEMO_METADATA_KEYS.laneKey]: l.laneKey,
                   [DEMO_METADATA_KEYS.isDefaultLane]: l.isDefault,
                 },
@@ -313,13 +311,11 @@ const App = () => {
       title: addLaneDraft.title,
       connectionId: tempLaneId - 1,
       position: previousBoard.lanes.length + 1,
-      wipLimit: addLaneDraft.wipLimit,
       laneKey: optimisticLaneKey,
       color: addLaneDraft.color,
       isDefault: false,
       metadata: {
         [DEMO_METADATA_KEYS.laneColor]: addLaneDraft.color,
-        [DEMO_METADATA_KEYS.laneWipLimit]: String(addLaneDraft.wipLimit),
         [DEMO_METADATA_KEYS.laneKey]: optimisticLaneKey,
         [DEMO_METADATA_KEYS.isDefaultLane]: false,
       },
@@ -341,7 +337,6 @@ const App = () => {
         board.id,
         addLaneDraft.title,
         addLaneDraft.color,
-        addLaneDraft.wipLimit,
         board.lanes.length,
       )
       dispatch({
@@ -577,13 +572,9 @@ const App = () => {
           isBusy={isBusy}
           title={addLaneDraft.title}
           color={addLaneDraft.color}
-          wipLimit={addLaneDraft.wipLimit}
           onOpenChange={(open) => dispatch({ type: 'SET_ADD_LANE_DIALOG', open })}
           onTitleChange={(value) => dispatch({ type: 'PATCH_ADD_LANE', patch: { title: value } })}
           onColorChange={(value) => dispatch({ type: 'PATCH_ADD_LANE', patch: { color: value } })}
-          onWipLimitChange={(value) =>
-            dispatch({ type: 'PATCH_ADD_LANE', patch: { wipLimit: value } })
-          }
           onSubmit={handleAddLane}
         />
 

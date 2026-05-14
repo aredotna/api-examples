@@ -14,11 +14,9 @@ interface AddLaneDialogProps {
   isBusy: boolean
   title: string
   color: string
-  wipLimit: number
   onOpenChange: (open: boolean) => void
   onTitleChange: (value: string) => void
   onColorChange: (value: string) => void
-  onWipLimitChange: (value: number) => void
   onSubmit: () => Promise<void>
 }
 
@@ -27,11 +25,9 @@ export const AddLaneDialog = ({
   isBusy,
   title,
   color,
-  wipLimit,
   onOpenChange,
   onTitleChange,
   onColorChange,
-  onWipLimitChange,
   onSubmit,
 }: AddLaneDialogProps) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
@@ -49,23 +45,12 @@ export const AddLaneDialog = ({
           autoFocus
         />
 
-        <div className="grid grid-cols-[84px_1fr] gap-3">
-          <Input
-            type="color"
-            value={color}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => onColorChange(event.target.value)}
-            className="h-8 p-1"
-          />
-          <Input
-            type="number"
-            min={1}
-            value={wipLimit}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              onWipLimitChange(Number.parseInt(event.target.value, 10) || 1)
-            }
-            placeholder="WIP limit"
-          />
-        </div>
+        <Input
+          type="color"
+          value={color}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => onColorChange(event.target.value)}
+          className="h-8 w-24 p-1"
+        />
       </div>
 
       <div className="flex items-center justify-end gap-2 border-t border-border pt-3">

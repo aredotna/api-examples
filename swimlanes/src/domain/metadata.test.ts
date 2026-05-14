@@ -22,12 +22,12 @@ describe('metadata helpers', () => {
 
   it('parses numeric strings when reading numeric metadata', () => {
     const metadata = toMetadataRecord({
-      wip_limit: '6',
+      estimate_points: '6',
     })
 
     expect(metadata).toEqual({
-      wip_limit: '6',
+      estimate_points: '6',
     })
-    expect(readNumberMetadata(metadata, 'wip_limit', 0)).toBe(6)
+    expect(readNumberMetadata(metadata, 'estimate_points', 0)).toBe(6)
   })
 })

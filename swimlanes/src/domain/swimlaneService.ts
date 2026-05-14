@@ -112,7 +112,6 @@ const mapLane = (channel: ArenaChannel): LaneModel => {
     connectionId: connection.id,
     position: connection.position,
     metadata: laneMetadata,
-    wipLimit: readNumberMetadata(laneMetadata, DEMO_METADATA_KEYS.laneWipLimit, 5),
     color: readStringMetadata(laneMetadata, DEMO_METADATA_KEYS.laneColor, '#93c5fd'),
     laneKey: readStringMetadata(
       laneMetadata,
@@ -212,7 +211,6 @@ export interface LaneChannelSetup {
   title: string
   key: string
   color: string
-  wipLimit: number
   isDefault: boolean
 }
 
@@ -228,7 +226,6 @@ const createLaneWithConnection = async (
     description: `Swimlane ${lane.title}`,
     metadata: {
       [DEMO_METADATA_KEYS.laneColor]: lane.color,
-      [DEMO_METADATA_KEYS.laneWipLimit]: String(lane.wipLimit),
       [DEMO_METADATA_KEYS.laneKey]: lane.key,
       [DEMO_METADATA_KEYS.isDefaultLane]: lane.isDefault,
     },
@@ -312,7 +309,6 @@ export const addLane = async (
   boardId: number,
   laneTitle: string,
   laneColor: string,
-  wipLimit: number,
   laneIndex: number,
 ): Promise<CreatedLane> => {
   const laneKey = laneKeyFromTitle(laneTitle)
@@ -324,7 +320,6 @@ export const addLane = async (
       key: laneKey,
       title: laneTitle,
       color: laneColor,
-      wipLimit,
       isDefault: false,
     },
     laneIndex,
@@ -369,14 +364,12 @@ export const updateLaneSettings = async (
   patch: {
     title: string
     color: string
-    wipLimit: number
   },
 ): Promise<void> => {
   await client.channels.update(lane.id, {
     title: patch.title,
     metadata: {
       [DEMO_METADATA_KEYS.laneColor]: patch.color,
-      [DEMO_METADATA_KEYS.laneWipLimit]: String(patch.wipLimit),
       [DEMO_METADATA_KEYS.laneKey]: lane.laneKey,
       [DEMO_METADATA_KEYS.isDefaultLane]: lane.isDefault,
       [OBSOLETE_METADATA_KEYS.laneOrder]: null,

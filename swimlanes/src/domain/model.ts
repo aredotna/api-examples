@@ -7,7 +7,6 @@ export interface LaneTemplate {
   key: string
   title: string
   color: string
-  wipLimit: number
   isDefault: boolean
 }
 
@@ -17,7 +16,6 @@ export interface LaneModel {
   connectionId: number
   position: number
   metadata: MetadataRecord
-  wipLimit: number
   laneKey: string
   color: string
   isDefault: boolean
@@ -67,7 +65,6 @@ export const DEMO_METADATA_KEYS = {
   appVersion: 'app_version',
   quarter: 'quarter',
   laneColor: 'lane_color',
-  laneWipLimit: 'wip_limit',
   laneKey: 'lane_key',
   isDefaultLane: 'is_default_lane',
   cardPriority: 'priority',
@@ -83,28 +80,24 @@ export const DEFAULT_LANES: readonly LaneTemplate[] = [
     key: 'backlog',
     title: 'Backlog',
     color: '#59D5E0',
-    wipLimit: 8,
     isDefault: true,
   },
   {
     key: 'in_progress',
     title: 'In Progress',
     color: '#21B6A8',
-    wipLimit: 4,
     isDefault: true,
   },
   {
     key: 'review',
     title: 'Review',
     color: '#F3B664',
-    wipLimit: 3,
     isDefault: true,
   },
   {
     key: 'done',
     title: 'Done',
     color: '#7AB2B2',
-    wipLimit: 999,
     isDefault: true,
   },
 ]

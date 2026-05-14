@@ -13,7 +13,6 @@ import type { LaneDraft } from '../ui/lane-sheet'
 export interface AddLaneDraft {
   title: string
   color: string
-  wipLimit: number
 }
 
 export interface AppState {
@@ -42,7 +41,6 @@ export const DEFAULT_CARD_DRAFT: CardDraft = {
 const DEFAULT_ADD_LANE_DRAFT: AddLaneDraft = {
   title: '',
   color: '#7dd3fc',
-  wipLimit: 3,
 }
 
 export const initialAppState: AppState = {
@@ -91,12 +89,7 @@ export type AppAction =
 // ─── Derived-state helpers ───────────────────────────────────────────
 
 const buildLaneDrafts = (board: BoardModel): Record<number, LaneDraft> =>
-  Object.fromEntries(
-    board.lanes.map((lane) => [
-      lane.id,
-      { title: lane.title, color: lane.color, wipLimit: lane.wipLimit },
-    ]),
-  )
+  Object.fromEntries(board.lanes.map((lane) => [lane.id, { title: lane.title, color: lane.color }]))
 
 const deriveCardEditorDraft = (
   board: BoardModel | null,

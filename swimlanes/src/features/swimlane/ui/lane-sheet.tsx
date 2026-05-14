@@ -14,7 +14,6 @@ import type { LaneModel } from '@/domain/model'
 export interface LaneDraft {
   title: string
   color: string
-  wipLimit: number
 }
 
 interface LaneSheetProps {
@@ -57,27 +56,14 @@ export const LaneSheet = ({
             placeholder="Lane title"
           />
 
-          <div className="grid grid-cols-[84px_1fr] gap-3">
-            <Input
-              type="color"
-              value={draft.color}
-              onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                onDraftChange({ color: event.target.value })
-              }
-              className="h-8 p-1"
-            />
-            <Input
-              type="number"
-              min={1}
-              value={draft.wipLimit}
-              onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                onDraftChange({
-                  wipLimit: Number.parseInt(event.target.value, 10) || 1,
-                })
-              }
-              placeholder="WIP limit"
-            />
-          </div>
+          <Input
+            type="color"
+            value={draft.color}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              onDraftChange({ color: event.target.value })
+            }
+            className="h-8 w-24 p-1"
+          />
         </div>
 
         <SheetFooter>

@@ -2,7 +2,6 @@ import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine'
 import { draggable, dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 import { GripVerticalIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type { LaneDragData } from '@/domain/dnd'
 import type { CardModel, LaneModel } from '@/domain/model'
@@ -95,7 +94,6 @@ export const LaneColumn = ({
             className="size-5"
           />
         </div>
-        <Badge variant="outline">WIP {lane.wipLimit}</Badge>
       </div>
 
       <Button
