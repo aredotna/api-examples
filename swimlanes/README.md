@@ -2,6 +2,8 @@
 
 A kanban-style swimlane board built on the Are.na API. Channels become lanes, blocks become cards, and connection metadata tracks card placement and state.
 
+Live example: [`arena-api-examples-swimlanes.vercel.app`](https://arena-api-examples-swimlanes.vercel.app/)
+
 ## Stack
 
 - pnpm + Vite + React 19
@@ -62,7 +64,7 @@ For local API development, set `VITE_ARENA_API_BASE=http://127.0.0.1:3111`. Set 
 For Vercel, also register the deployed callback URL in your Are.na OAuth application:
 
 ```text
-https://<your-project>.vercel.app/auth/callback
+https://arena-api-examples-swimlanes.vercel.app/auth/callback
 ```
 
 ## Available Scripts

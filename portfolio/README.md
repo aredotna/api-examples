@@ -2,6 +2,8 @@
 
 A minimal statically generated portfolio site backed by a public Are.na channel.
 
+Live example: [`arena-api-examples-portfolio.vercel.app`](https://arena-api-examples-portfolio.vercel.app/)
+
 The app uses one top-level channel as its source. Blocks connected directly to that
 channel render on the home page, and channels connected to it become the persistent
 site navigation. Blocks in those child channels render on their own static pages.
@@ -11,7 +13,8 @@ site navigation. Blocks in those child channels render on their own static pages
 - pnpm + Next.js 15 + React 19
 - Static export (`next build`)
 - Server-fetched public Are.na data via `@aredotna/sdk`
-- No auth and no client-side data fetching
+- SSR measured masonry via Pretext and `@napi-rs/canvas`
+- No auth and no client-side API fetching
 - RSS feed and Open Graph metadata
 
 ## Quick Start
@@ -35,6 +38,12 @@ NEXT_PUBLIC_SITE_URL=http://127.0.0.1:5175
 `ARENA_CHANNEL_SLUG` must point to a public Are.na channel. Keep the root channel
 small enough to fetch at build time: the build reads all root blocks plus all
 blocks in one level of child channels.
+
+For the deployed example, set `NEXT_PUBLIC_SITE_URL` to:
+
+```sh
+NEXT_PUBLIC_SITE_URL=https://arena-api-examples-portfolio.vercel.app
+```
 
 ## Routes
 

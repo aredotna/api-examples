@@ -6,11 +6,11 @@ Each example lives in its own folder, picks its own stack and tooling, and deplo
 
 ## Examples
 
-| Folder                      | What it shows                                                                                                                                 | Stack                                                      |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| [`explorer/`](./explorer)   | Generic Are.na client for browsing channels, blocks, and users — built on the published `@aredotna/sdk` and `@aredotna/react-query` packages. | Vite, React 18, pnpm, `@aredotna/sdk`                      |
-| [`portfolio/`](./portfolio) | Minimal static portfolio site generated from one public Are.na channel, with block permalinks, OG tags, and RSS.                              | Next.js 15, React 19, pnpm, `@aredotna/sdk`                |
-| [`swimlanes/`](./swimlanes) | Kanban-style board built on the published `@aredotna/sdk` and `@aredotna/react-query` packages.                                               | Vite, React 19, pnpm, Tailwind, shadcn/ui, `@aredotna/sdk` |
+| Folder                      | Live example                                                                    | What it shows                                                                                                                                 | Stack                                                                        |
+| --------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [`explorer/`](./explorer)   | [`arena-api-examples-explorer.vercel.app`](https://arena-api-examples-explorer.vercel.app/)   | Generic Are.na client for browsing channels, blocks, and users — built on the published `@aredotna/sdk` and `@aredotna/react-query` packages. | Vite, React 18, pnpm, Radix, `@aredotna/sdk`, `@aredotna/react-query`         |
+| [`portfolio/`](./portfolio) | [`arena-api-examples-portfolio.vercel.app`](https://arena-api-examples-portfolio.vercel.app/) | Minimal static portfolio site generated from one public Are.na channel, with measured masonry, block permalinks, OG tags, and RSS.            | Next.js 15, React 19, pnpm, Pretext, `@napi-rs/canvas`, `@aredotna/sdk`       |
+| [`swimlanes/`](./swimlanes) | [`arena-api-examples-swimlanes.vercel.app`](https://arena-api-examples-swimlanes.vercel.app/) | Kanban-style board built on the published `@aredotna/sdk` and `@aredotna/react-query` packages.                                               | Vite, React 19, pnpm, Tailwind, shadcn/ui, `@aredotna/sdk`, `@aredotna/react-query` |
 
 See each folder's `README.md` for setup, env vars, and scripts.
 
@@ -70,8 +70,8 @@ Each example is deployed as its own Vercel project. When creating a project on V
 3. Vercel will pick up the example's own `vercel.json` and `package.json`, using the root pnpm lockfile.
 4. Set the example's environment variables (see its `.env.example`).
 5. Add the deployed callback URL to the Are.na OAuth app:
-   - Explorer: `https://<your-project>.vercel.app/auth/callback`
-   - Swimlanes: `https://<your-project>.vercel.app/auth/callback`
+   - Explorer: `https://arena-api-examples-explorer.vercel.app/auth/callback`
+   - Swimlanes: `https://arena-api-examples-swimlanes.vercel.app/auth/callback`
 
 Pushes to `main` will trigger deploys for every linked Vercel project, but each one only rebuilds when files inside its root directory change.
 

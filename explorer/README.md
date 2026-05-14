@@ -2,6 +2,8 @@
 
 A generic Are.na client for browsing channels, blocks, and users. Built with React + TypeScript on top of the published `@aredotna/sdk` and `@aredotna/react-query` packages.
 
+Live example: [`arena-api-examples-explorer.vercel.app`](https://arena-api-examples-explorer.vercel.app/)
+
 ## Quick Start
 
 ```sh
@@ -48,7 +50,7 @@ http://127.0.0.1:5173/auth/callback
 For Vercel, also register the deployed callback URL:
 
 ```text
-https://<your-project>.vercel.app/auth/callback
+https://arena-api-examples-explorer.vercel.app/auth/callback
 ```
 
 The demo creates a stable Are.na SDK client in `src/App.tsx`, provides it with `ArenaProvider`, and stores OAuth tokens in `sessionStorage` for future SDK requests.
