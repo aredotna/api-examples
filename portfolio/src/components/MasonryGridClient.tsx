@@ -32,19 +32,36 @@ export function MasonryGridClient({ initialLayout, items }: MasonryGridClientPro
   }, [items])
 
   useLayoutEffect(() => {
-    preparedItemsRef.current = prepareMasonryItems(items)
-    updateLayout()
+    let isCancelled = false
+
+    async function prepareAndUpdateLayout() {
+      await Promise.all([document.fonts.load('16px Areal'), document.fonts.load('12px Areal')])
+
+      if (isCancelled) {
+        return
+      }
+
+      preparedItemsRef.current = prepareMasonryItems(items)
+      updateLayout()
+    }
+
+    prepareAndUpdateLayout()
 
     const container = containerRef.current
 
     if (!container) {
-      return undefined
+      return () => {
+        isCancelled = true
+      }
     }
 
     const resizeObserver = new ResizeObserver(updateLayout)
     resizeObserver.observe(container)
 
-    return () => resizeObserver.disconnect()
+    return () => {
+      isCancelled = true
+      resizeObserver.disconnect()
+    }
   }, [items, updateLayout])
 
   return (

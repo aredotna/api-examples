@@ -1,6 +1,9 @@
 import 'server-only'
 
-import { createCanvas } from '@napi-rs/canvas'
+import { join } from 'node:path'
+import { createCanvas, GlobalFonts } from '@napi-rs/canvas'
+
+let didRegisterFonts = false
 
 class NodeOffscreenCanvas {
   private canvas: {
@@ -18,4 +21,9 @@ class NodeOffscreenCanvas {
 
 export function ensureServerTextMeasurement() {
   globalThis.OffscreenCanvas ??= NodeOffscreenCanvas as unknown as typeof OffscreenCanvas
+
+  if (!didRegisterFonts) {
+    GlobalFonts.registerFromPath(join(process.cwd(), 'public/fonts/Areal-Regular.woff2'), 'Areal')
+    didRegisterFonts = true
+  }
 }
