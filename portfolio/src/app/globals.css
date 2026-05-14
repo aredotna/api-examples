@@ -194,17 +194,18 @@ main {
 }
 
 .thumbnail-grid {
-  column-gap: 4rem;
-  columns: 3 220px;
+  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
 }
 
 .thumbnail {
   background: var(--surface);
   color: inherit;
-  display: inline-block;
-  margin: 0 0 4rem;
+  display: block;
+  left: 0;
   overflow: hidden;
-  width: 100%;
+  position: absolute;
+  top: 0;
 }
 
 .thumbnail-media {
@@ -214,7 +215,8 @@ main {
 }
 
 .thumbnail-media img {
-  height: auto;
+  height: 100%;
+  object-fit: contain;
   width: 100%;
 }
 
@@ -230,15 +232,12 @@ main {
   display: block;
   font-size: 0.75rem;
   margin-top: 0.75rem;
+  overflow: hidden;
 }
 
 @media (max-width: 640px) {
   .site-header,
   .block-header {
     display: grid;
-  }
-
-  .thumbnail-grid {
-    columns: 1;
   }
 }
