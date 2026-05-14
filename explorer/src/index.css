@@ -91,3 +91,34 @@ body {
 #root {
   min-height: 100vh;
 }
+
+.explorer-error-boundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: #f7f7f4;
+  color: #111;
+}
+
+.explorer-error-boundary__panel {
+  width: min(100%, 720px);
+  border: 1px solid #d7d7d2;
+  background: #fff;
+  padding: 24px;
+}
+
+.explorer-error-boundary__panel h1 {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.explorer-error-boundary__panel pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: "ArealMono", monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
