@@ -2,9 +2,9 @@ import 'server-only'
 
 import { createArena } from '@aredotna/sdk'
 
+const ARENA_API_BASE_URL = 'https://api.are.na'
 const DEFAULT_CHANNEL_SLUG = 'arena-influences'
-const DEFAULT_API_BASE_URL = 'https://api.are.na'
-const DEFAULT_SITE_URL = 'http://127.0.0.1:5175'
+const LOCAL_SITE_URL = 'http://127.0.0.1:5175'
 
 function requiredValue(value: string | undefined, fallback: string, name: string) {
   const resolved = value?.trim() || fallback
@@ -16,30 +16,18 @@ function requiredValue(value: string | undefined, fallback: string, name: string
   return resolved
 }
 
-function validUrl(value: string | undefined, fallback: string, name: string) {
-  const resolved = requiredValue(value, fallback, name)
-
-  try {
-    return new URL(resolved).toString().replace(/\/$/, '')
-  } catch {
-    throw new Error(`${name} must be a valid URL`)
-  }
-}
-
 export function getRootChannelSlug() {
   return requiredValue(process.env.ARENA_CHANNEL_SLUG, DEFAULT_CHANNEL_SLUG, 'ARENA_CHANNEL_SLUG')
 }
 
-export function getArenaApiBaseUrl() {
-  return validUrl(process.env.ARENA_API_BASE_URL, DEFAULT_API_BASE_URL, 'ARENA_API_BASE_URL')
-}
-
 export function getSiteUrl() {
-  return validUrl(process.env.NEXT_PUBLIC_SITE_URL, DEFAULT_SITE_URL, 'NEXT_PUBLIC_SITE_URL')
+  return process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : LOCAL_SITE_URL
 }
 
 export const arena = createArena({
-  baseUrl: getArenaApiBaseUrl(),
+  baseUrl: ARENA_API_BASE_URL,
   retry: {
     maxRetries: 2,
     respectRateLimits: true,
